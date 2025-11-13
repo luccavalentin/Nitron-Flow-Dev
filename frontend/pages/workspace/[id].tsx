@@ -22,28 +22,54 @@ export default function Workspace() {
   }, [id]);
 
   const loadWorkspace = async () => {
-    // TODO: Implementar endpoint para buscar workspace
-    setWorkspace({ id, name: `Workspace ${id}` });
+    const response = await apiRequest(`/workspace/get?id=${id}`);
+    if (response.ok && response.data) {
+      setWorkspace(response.data);
+      // Configurar URL do code-server baseado no workspace
+      if (response.data.storage_path) {
+        setCodeServerUrl(`http://localhost:8080/?folder=/workspace/${id}`);
+      }
+    }
     setLoading(false);
   };
 
   const loadSnapshots = async () => {
-    // TODO: Implementar endpoint para buscar snapshots
-    setSnapshots([]);
+    const response = await apiRequest(`/snapshots/get?workspaceId=${id}`);
+    if (response.ok && response.data) {
+      setSnapshots(response.data);
+    }
   };
 
   const handleSnapshot = async () => {
     const name = prompt("Nome do snapshot:");
     if (!name) return;
 
-    const response = await apiRequest(`/workspace/${id}/snapshot`, {
+    const response = await apiRequest(`/workspace/snapshot`, {
       method: "POST",
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ workspaceId: id, name }),
     });
 
     if (response.ok) {
       loadSnapshots();
       alert("Snapshot criado com sucesso!");
+    } else {
+      alert(`Erro: ${response.error}`);
+    }
+  };
+
+  const handleCommit = async () => {
+    const message = prompt("Mensagem do commit:");
+    if (!message) return;
+
+    const response = await apiRequest(`/workspace/commit`, {
+      method: "POST",
+      body: JSON.stringify({ workspaceId: id, message }),
+    });
+
+    if (response.ok) {
+      alert("Commit realizado com sucesso!");
+    } else {
+      alert(`Erro: ${response.error}`);
     }
   };
 
@@ -78,7 +104,10 @@ export default function Workspace() {
               >
                 Criar Snapshot
               </button>
-              <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm">
+              <button
+                onClick={handleCommit}
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
+              >
                 Commit & Push
               </button>
             </div>
@@ -105,23 +134,41 @@ export default function Workspace() {
             )}
           </div>
 
-          {snapshots.length > 0 && (
-            <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
-              <h2 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                Snapshots
+          <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-sm font-medium text-gray-900 dark:text-white">
+                Snapshots ({snapshots.length})
               </h2>
+              {snapshots.length > 0 && (
+                <button
+                  onClick={loadSnapshots}
+                  className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                >
+                  Atualizar
+                </button>
+              )}
+            </div>
+            {snapshots.length > 0 ? (
               <div className="flex space-x-2 overflow-x-auto">
                 {snapshots.map((snapshot) => (
                   <div
                     key={snapshot.id}
-                    className="flex-shrink-0 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded text-sm text-gray-700 dark:text-gray-300"
+                    className="flex-shrink-0 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    title={new Date(snapshot.created_at).toLocaleString("pt-BR")}
                   >
-                    {snapshot.name}
+                    <div className="font-medium">{snapshot.name}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {new Date(snapshot.created_at).toLocaleDateString("pt-BR")}
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Nenhum snapshot criado ainda
+              </p>
+            )}
+          </div>
         </main>
       </div>
     </div>

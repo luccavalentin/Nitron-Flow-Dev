@@ -37,8 +37,8 @@ serve(async (req) => {
       );
     }
 
-    const body = await req.json();
-    const { workspaceId, name } = body;
+    const url = new URL(req.url);
+    const workspaceId = url.searchParams.get("workspaceId");
 
     if (!workspaceId) {
       return new Response(
@@ -50,15 +50,15 @@ serve(async (req) => {
       );
     }
 
-    // Verificar se o workspace pertence a um projeto do usuário
-    const { data: workspace, error: workspaceError } = await supabaseClient
+    // Verificar se o workspace pertence ao usuário
+    const { data: workspace } = await supabaseClient
       .from("workspaces")
       .select("*, projects!inner(owner_id)")
       .eq("id", workspaceId)
       .eq("projects.owner_id", user.id)
       .single();
 
-    if (workspaceError || !workspace) {
+    if (!workspace) {
       return new Response(
         JSON.stringify({ ok: false, error: "Workspace não encontrado" }),
         {
@@ -68,45 +68,17 @@ serve(async (req) => {
       );
     }
 
-    // Listar todos os arquivos do workspace
-    const { data: files, error: listError } = await supabaseClient.storage
-      .from("workspaces")
-      .list(`workspaces/${workspaceId}`, {
-        limit: 1000,
-        offset: 0,
-        sortBy: { column: "name", order: "asc" },
-      });
-
-    if (listError) {
-      return new Response(
-        JSON.stringify({ ok: false, error: listError.message }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // Criar snapshot
-    const snapshotName = name || `snapshot-${Date.now()}`;
-    const snapshotPath = `snapshots/${workspaceId}/${snapshotName}.json`;
-
-    const snapshotData = {
-      workspace_id: workspaceId,
-      files: files || [],
-      created_at: new Date().toISOString(),
-    };
-
-    const { error: snapshotError } = await supabaseClient.storage
+    // Buscar snapshots
+    const { data: snapshots, error } = await supabaseClient
       .from("snapshots")
-      .upload(snapshotPath, JSON.stringify(snapshotData), {
-        contentType: "application/json",
-        upsert: false,
-      });
+      .select("*")
+      .eq("workspace_id", workspaceId)
+      .order("created_at", { ascending: false })
+      .limit(50);
 
-    if (snapshotError) {
+    if (error) {
       return new Response(
-        JSON.stringify({ ok: false, error: snapshotError.message }),
+        JSON.stringify({ ok: false, error: error.message }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -114,30 +86,8 @@ serve(async (req) => {
       );
     }
 
-    // Criar registro no banco
-    const { data: snapshot, error: dbError } = await supabaseClient
-      .from("snapshots")
-      .insert({
-        workspace_id: workspaceId,
-        name: snapshotName,
-        storage_path: snapshotPath,
-        created_by: user.id,
-      })
-      .select()
-      .single();
-
-    if (dbError) {
-      return new Response(
-        JSON.stringify({ ok: false, error: dbError.message }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    return new Response(JSON.stringify({ ok: true, data: snapshot }), {
-      status: 201,
+    return new Response(JSON.stringify({ ok: true, data: snapshots || [] }), {
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
@@ -147,3 +97,4 @@ serve(async (req) => {
     });
   }
 });
+
