@@ -24,9 +24,111 @@ export async function apiRequest<T = any>(
       return { ok: false, error: 'Não autenticado' }
     }
     
-    // Em dev mode, retornar dados mockados ou permitir requisições sem auth
-    // Por enquanto, vamos permitir mas sem token real
+    // Em dev mode, verificar primeiro se temos suporte no localStorage
+    // Se sim, usar diretamente sem tentar fazer fetch
+    if (endpoint.includes('/projects') && !endpoint.includes('/init-roadmap')) {
+      if (options?.method === 'GET' || !options?.method) {
+        return { ok: true, data: localStorageService.getProjects() }
+      }
+    } else if (endpoint.includes('/clients')) {
+      if (options?.method === 'GET' || !options?.method) {
+        return { ok: true, data: localStorageService.getClients() }
+      }
+    } else if (endpoint.includes('/tasks')) {
+      if (options?.method === 'GET' || !options?.method) {
+        return { ok: true, data: localStorageService.getTasks() }
+      }
+    } else if (endpoint.includes('/budgets')) {
+      if (options?.method === 'GET' || !options?.method) {
+        return { ok: true, data: localStorageService.getBudgets() }
+      }
+    } else if (endpoint.includes('/receipts')) {
+      if (options?.method === 'GET' || !options?.method) {
+        return { ok: true, data: localStorageService.getReceipts() }
+      }
+    } else if (endpoint.includes('/payments')) {
+      if (options?.method === 'GET' || !options?.method) {
+        return { ok: true, data: localStorageService.getPayments() }
+      }
+    } else if (endpoint.includes('/activities')) {
+      if (options?.method === 'GET' || !options?.method) {
+        return { ok: true, data: localStorageService.getActivities() }
+      }
+    } else if (endpoint.includes('/roadmap')) {
+      const roadmap = localStorageService.getRoadmap()
+      
+      // GET - filtrar por projectId se fornecido
+      if (options?.method === 'GET' || !options?.method) {
+        try {
+          // Tentar extrair projectId da URL
+          const urlMatch = endpoint.match(/[?&]projectId=([^&]+)/)
+          const projectId = urlMatch ? urlMatch[1] : null
+          
+          if (projectId) {
+            const filtered = roadmap.filter((item: any) => item.project_id === projectId)
+            return { ok: true, data: filtered }
+          }
+          return { ok: true, data: roadmap }
+        } catch (e) {
+          return { ok: true, data: roadmap }
+        }
+      }
+      
+      // POST - criar novo roadmap item
+      if (options?.method === 'POST') {
+        try {
+          const body = JSON.parse(options.body as string)
+          const newItem = {
+            id: `roadmap-${Date.now()}`,
+            ...body,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }
+          roadmap.push(newItem)
+          localStorageService.saveRoadmap(roadmap)
+          return { ok: true, data: newItem }
+        } catch (e) {
+          return { ok: false, error: 'Erro ao criar roadmap item' }
+        }
+      }
+      
+      // PUT - atualizar roadmap item
+      if (options?.method === 'PUT') {
+        try {
+          const body = JSON.parse(options.body as string)
+          const index = roadmap.findIndex((item: any) => item.id === body.id)
+          if (index !== -1) {
+            roadmap[index] = { ...roadmap[index], ...body, updated_at: new Date().toISOString() }
+            localStorageService.saveRoadmap(roadmap)
+            return { ok: true, data: roadmap[index] }
+          }
+          return { ok: false, error: 'Roadmap item não encontrado' }
+        } catch (e) {
+          return { ok: false, error: 'Erro ao atualizar roadmap item' }
+        }
+      }
+      
+      // DELETE - deletar roadmap item
+      if (options?.method === 'DELETE') {
+        try {
+          const body = JSON.parse(options.body as string)
+          const filtered = roadmap.filter((item: any) => item.id !== body.id)
+          localStorageService.saveRoadmap(filtered)
+          return { ok: true, data: { id: body.id } }
+        } catch (e) {
+          return { ok: false, error: 'Erro ao deletar roadmap item' }
+        }
+      }
+    }
+    
+    // Se chegou aqui e não tem suporte no localStorage, tentar fazer fetch
+    // Mas só se tiver API_URL configurado
     const apiUrl = getApiUrl()
+    if (!apiUrl) {
+      // Sem API URL e sem suporte no localStorage, retornar vazio
+      return { ok: true, data: [] }
+    }
+    
     const fullUrl = endpoint.startsWith('http') 
       ? endpoint 
       : `${apiUrl}${endpoint}`
@@ -53,102 +155,7 @@ export async function apiRequest<T = any>(
       // Em dev mode, se a API não estiver disponível, usar localStorage
       console.log('🔧 Modo dev: usando localStorage para', endpoint)
       
-      // Mapear endpoints para localStorage
-      if (endpoint.includes('/projects') && !endpoint.includes('/init-roadmap')) {
-        if (options?.method === 'GET' || !options?.method) {
-          return { ok: true, data: localStorageService.getProjects() }
-        }
-      } else if (endpoint.includes('/clients')) {
-        if (options?.method === 'GET' || !options?.method) {
-          return { ok: true, data: localStorageService.getClients() }
-        }
-      } else if (endpoint.includes('/tasks')) {
-        if (options?.method === 'GET' || !options?.method) {
-          return { ok: true, data: localStorageService.getTasks() }
-        }
-      } else if (endpoint.includes('/budgets')) {
-        if (options?.method === 'GET' || !options?.method) {
-          return { ok: true, data: localStorageService.getBudgets() }
-        }
-      } else if (endpoint.includes('/receipts')) {
-        if (options?.method === 'GET' || !options?.method) {
-          return { ok: true, data: localStorageService.getReceipts() }
-        }
-      } else if (endpoint.includes('/payments')) {
-        if (options?.method === 'GET' || !options?.method) {
-          return { ok: true, data: localStorageService.getPayments() }
-        }
-      } else if (endpoint.includes('/activities')) {
-        if (options?.method === 'GET' || !options?.method) {
-          return { ok: true, data: localStorageService.getActivities() }
-        }
-      } else if (endpoint.includes('/roadmap')) {
-        const roadmap = localStorageService.getRoadmap()
-        
-        // GET - filtrar por projectId se fornecido
-        if (options?.method === 'GET' || !options?.method) {
-          try {
-            // Tentar extrair projectId da URL
-            const urlMatch = endpoint.match(/[?&]projectId=([^&]+)/)
-            const projectId = urlMatch ? urlMatch[1] : null
-            
-            if (projectId) {
-              const filtered = roadmap.filter((item: any) => item.project_id === projectId)
-              return { ok: true, data: filtered }
-            }
-            return { ok: true, data: roadmap }
-          } catch (e) {
-            return { ok: true, data: roadmap }
-          }
-        }
-        
-        // POST - criar novo roadmap item
-        if (options?.method === 'POST') {
-          try {
-            const body = JSON.parse(options.body as string)
-            const newItem = {
-              id: `roadmap-${Date.now()}`,
-              ...body,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            }
-            roadmap.push(newItem)
-            localStorageService.saveRoadmap(roadmap)
-            return { ok: true, data: newItem }
-          } catch (e) {
-            return { ok: false, error: 'Erro ao criar roadmap item' }
-          }
-        }
-        
-        // PUT - atualizar roadmap item
-        if (options?.method === 'PUT') {
-          try {
-            const body = JSON.parse(options.body as string)
-            const index = roadmap.findIndex((item: any) => item.id === body.id)
-            if (index !== -1) {
-              roadmap[index] = { ...roadmap[index], ...body, updated_at: new Date().toISOString() }
-              localStorageService.saveRoadmap(roadmap)
-              return { ok: true, data: roadmap[index] }
-            }
-            return { ok: false, error: 'Roadmap item não encontrado' }
-          } catch (e) {
-            return { ok: false, error: 'Erro ao atualizar roadmap item' }
-          }
-        }
-        
-        // DELETE - deletar roadmap item
-        if (options?.method === 'DELETE') {
-          try {
-            const body = JSON.parse(options.body as string)
-            const filtered = roadmap.filter((item: any) => item.id !== body.id)
-            localStorageService.saveRoadmap(filtered)
-            return { ok: true, data: { id: body.id } }
-          } catch (e) {
-            return { ok: false, error: 'Erro ao deletar roadmap item' }
-          }
-        }
-      }
-      
+      // Se chegou aqui, não temos suporte no localStorage e a API falhou
       return { ok: true, data: [] }
     }
   }
