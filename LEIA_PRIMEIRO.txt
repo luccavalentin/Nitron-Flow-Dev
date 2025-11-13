@@ -74,3 +74,20 @@ Linux/Mac:
 
 🎯 RESULTADO: Sistema web completo e funcional!
 
+═══════════════════════════════════════════════════════════════
+
+⚠️  ERRO: "supabaseUrl is required"?
+
+O sistema vai carregar mesmo sem Supabase configurado!
+
+Você verá um aviso amarelo no topo da página.
+
+Para configurar:
+1. Veja: CONFIGURAR_SUPABASE.txt
+2. Crie: frontend/.env.local
+3. Copie de: frontend/env.local.example
+4. Preencha com suas credenciais
+5. REINICIE o servidor (Ctrl+C e depois npm run dev)
+
+═══════════════════════════════════════════════════════════════
+
