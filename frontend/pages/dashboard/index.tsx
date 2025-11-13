@@ -234,47 +234,68 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg">
+                <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-3">
                   Receita Total
                 </h3>
-                <p className="text-4xl font-bold text-green-600 dark:text-green-400">
+                <p className="text-3xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
                   R$ {summary?.finance?.total?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                  Licenças Ativas: {summary?.finance?.active_licenses || 0}
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  {summary?.finance?.active_licenses || 0} licenças ativas
                 </p>
+                <a
+                  href="/finance"
+                  className="inline-flex items-center px-3 py-1.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-medium rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
+                >
+                  Ver Detalhes
+                  <svg className="ml-1.5 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg">
+                <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
                   Ações Rápidas
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   <a
                     href="/projects"
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-center transition-colors"
+                    className="flex items-center justify-center px-3 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-medium rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
                   >
-                    Ver Projetos
-                  </a>
-                  <a
-                    href="/tasks"
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-center transition-colors"
-                  >
-                    Ver Tarefas
+                    <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Novo Projeto
                   </a>
                   <a
                     href="/clients"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center transition-colors"
+                    className="flex items-center justify-center px-3 py-2 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
                   >
-                    Ver Clientes
+                    <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14H8c-2.206 0-4 1.794-4 4v2h16v-2c0-2.206-1.794-4-4-4h-4z" />
+                    </svg>
+                    Novo Cliente
                   </a>
                   <a
-                    href="/finance"
-                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-center transition-colors"
+                    href="/tasks"
+                    className="flex items-center justify-center px-3 py-2 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
                   >
-                    Ver Financeiro
+                    <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    Nova Tarefa
+                  </a>
+                  <a
+                    href="/ai"
+                    className="flex items-center justify-center px-3 py-2 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v13z" />
+                    </svg>
+                    Nova Ideia
                   </a>
                 </div>
               </div>
