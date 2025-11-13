@@ -72,3 +72,23 @@ export const tasksApi = {
     }),
 }
 
+export const budgetsApi = {
+  getAll: (projectId?: string, clientId?: string) => {
+    const params = new URLSearchParams()
+    if (projectId) params.append('projectId', projectId)
+    if (clientId) params.append('clientId', clientId)
+    const url = `/budgets/get${params.toString() ? `?${params.toString()}` : ''}`
+    return apiRequest(url)
+  },
+  create: (data: any) => apiRequest('/budgets/create', { method: 'POST', body: JSON.stringify(data) }),
+}
+
+export const receiptsApi = {
+  getAll: () => apiRequest('/receipts/get'),
+}
+
+export const financeApi = {
+  getProducts: () => apiRequest('/finance/products'),
+  syncKiwify: () => apiRequest('/finance/sync-kiwify', { method: 'POST' }),
+}
+

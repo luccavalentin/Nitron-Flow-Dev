@@ -12,8 +12,10 @@ export default function Receipts() {
   }, []);
 
   const loadReceipts = async () => {
-    // TODO: Implementar endpoint
-    setReceipts([]);
+    const response = await apiRequest("/receipts/get");
+    if (response.ok && response.data) {
+      setReceipts(response.data);
+    }
     setLoading(false);
   };
 
@@ -63,7 +65,7 @@ export default function Receipts() {
                           {receipt.id}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          {receipt.client_id}
+                          {receipt.clients?.name || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           R$ {parseFloat(receipt.amount || "0").toLocaleString("pt-BR")}
