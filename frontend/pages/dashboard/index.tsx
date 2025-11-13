@@ -141,37 +141,37 @@ export default function Dashboard() {
   }
 
       return (
-        <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+        <div className="flex min-h-screen">
           <Sidebar />
           <div className="flex-1 flex flex-col">
             <Header />
             <main className="flex-1 p-8 overflow-y-auto">
               <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
-                  <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                  <h1 className="text-3xl font-bold gradient-text mb-2">
                     Dashboard
                   </h1>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-slate-400">
                     Visão geral do ambiente de desenvolvimento
                   </p>
                 </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+              <div className="card-modern p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider">
                     Projetos Ativos
                   </h3>
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-500/30">
+                    <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                   </div>
                 </div>
-                <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                <p className="text-3xl font-bold text-cyan-400 mb-1">
                   {summary?.projects?.active || 0}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500">
                   de {summary?.projects?.total || 0} projetos
                 </p>
               </div>
