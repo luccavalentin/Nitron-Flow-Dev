@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { isDevMode, hasDevSession } from '@/lib/dev-mode'
-import ConfigWarning from '@/components/ConfigWarning'
 import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -43,11 +42,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   if (!mounted) return null
 
-  return (
-    <>
-      <ConfigWarning />
-      <Component {...pageProps} />
-    </>
-  )
+  return <Component {...pageProps} />
 }
 
