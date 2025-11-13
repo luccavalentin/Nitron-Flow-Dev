@@ -22,21 +22,26 @@ export default function App({ Component, pageProps }: AppProps) {
     if (isDev) {
       // Se está em uma rota pública, não precisa verificar sessão
       if (publicPaths.includes(currentPath)) {
+        console.log('✅ Rota pública em modo dev, permitindo acesso')
         return
       }
       
-      // Verificar sessão dev com delay maior para garantir que foi salva
-      setTimeout(() => {
+      // Em modo dev, permitir acesso mesmo sem verificar sessão imediatamente
+      // A verificação só acontece se realmente não houver sessão após um tempo
+      const checkSession = () => {
         const hasSession = hasDevSession()
         console.log('🔍 Verificando sessão dev:', { currentPath, hasSession })
         
-        if (!hasSession) {
+        if (!hasSession && currentPath !== '/auth/login') {
           console.log('❌ Sem sessão, redirecionando para login')
           window.location.href = '/auth/login'
-        } else {
+        } else if (hasSession) {
           console.log('✅ Sessão encontrada, permitindo acesso')
         }
-      }, 500)
+      }
+      
+      // Verificar após um delay para dar tempo da sessão ser salva
+      setTimeout(checkSession, 1000)
       return
     }
     
