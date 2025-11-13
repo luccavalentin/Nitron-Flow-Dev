@@ -49,3 +49,17 @@ build/
 *.backup
 *~
 
+# Next.js
+.next/
+out/
+
+# Supabase
+.supabase/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# TypeScript
+*.tsbuildinfo
