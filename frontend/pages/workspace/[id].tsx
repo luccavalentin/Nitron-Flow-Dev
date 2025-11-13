@@ -178,6 +178,61 @@ export default function Workspace() {
           </div>
         </main>
       </div>
+
+      <InputModal
+        isOpen={showSnapshotModal}
+        onClose={() => {
+          setShowSnapshotModal(false);
+          setError("");
+        }}
+        onSubmit={handleSnapshot}
+        title="Criar Snapshot"
+        label="Nome do Snapshot"
+        placeholder="Digite o nome do snapshot"
+        required
+      />
+
+      <InputModal
+        isOpen={showCommitModal}
+        onClose={() => {
+          setShowCommitModal(false);
+          setError("");
+        }}
+        onSubmit={handleCommit}
+        title="Commit & Push"
+        label="Mensagem do Commit"
+        placeholder="Digite a mensagem do commit"
+        type="textarea"
+        required
+      />
+
+      {error && (
+        <div className="fixed bottom-4 right-4 z-50 card-modern p-4 border-l-4 border-red-500 max-w-md">
+          <div className="flex items-center justify-between">
+            <p className="text-red-400">{error}</p>
+            <button
+              onClick={() => setError("")}
+              className="ml-4 text-slate-400 hover:text-slate-200"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {success && (
+        <div className="fixed bottom-4 right-4 z-50 card-modern p-4 border-l-4 border-green-500 max-w-md">
+          <div className="flex items-center justify-between">
+            <p className="text-green-400">{success}</p>
+            <button
+              onClick={() => setSuccess("")}
+              className="ml-4 text-slate-400 hover:text-slate-200"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
