@@ -143,23 +143,26 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="max-w-md w-full space-y-6 p-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm"
+        className="max-w-md w-full space-y-6 p-8 glass rounded-xl tech-border"
       >
         <div>
-          <div className="flex items-center justify-center mb-2">
-            <div className="w-10 h-10 rounded-lg bg-slate-900 dark:bg-slate-100 flex items-center justify-center">
-              <span className="text-white dark:text-slate-900 font-semibold text-sm">NF</span>
+          <div className="flex items-center justify-center mb-3">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                <span className="text-white font-bold text-sm">NF</span>
+              </div>
+              <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse"></div>
             </div>
           </div>
-          <h2 className="text-center text-xl font-semibold text-slate-900 dark:text-slate-100">
+          <h2 className="text-center text-2xl font-bold gradient-text">
             NitronFlow
           </h2>
-          <p className="mt-1 text-center text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-2 text-center text-sm text-slate-400">
             Faça login para continuar
           </p>
         </div>
@@ -211,7 +214,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading || (!isSupabaseConfigured && !isDevMode())}
-              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 text-sm font-medium text-white bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 dark:focus:ring-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40"
             >
               {loading ? (
                 <>
