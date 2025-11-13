@@ -1,0 +1,51 @@
+# Dependências
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Ambientes virtuais
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+.cache/
+
+# Arquivos de build
+dist/
+build/
+*.egg-info/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
+
+# Arquivos de backup
+*.bak
+*.backup
+*~
+

@@ -1,0 +1,19 @@
+# Nitron-Flow-Dev
+
+Projeto de desenvolvimento Nitron-Flow-Dev
+
+## Controle de Versões
+
+Todas as versões são controladas via Git/GitHub seguindo o padrão:
+**V[NÚMERO] DATE [DATA] AS [HORA]**
+
+### Versões
+
+- **V1 DATE 13/11/25 AS 14:49** - Inicialização do projeto e configuração do Git/GitHub
+
+## Configuração
+
+- **GitHub**: luccavalentin
+- **Email**: luccasantana88@gmail.com
+- **Projeto**: Nitron-Flow-Dev
+
