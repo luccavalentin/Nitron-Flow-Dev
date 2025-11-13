@@ -13,8 +13,10 @@ export default function AI() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [speaking, setSpeaking] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,6 +129,94 @@ export default function AI() {
     }
   };
 
+  const speakText = (text: string, messageId: string) => {
+    if (!('speechSynthesis' in window)) {
+      alert("Seu navegador não suporta síntese de voz");
+      return;
+    }
+
+    if (speaking === messageId) {
+      // Parar se já está falando esta mensagem
+      window.speechSynthesis.cancel();
+      setSpeaking(null);
+      return;
+    }
+
+    // Parar qualquer fala anterior
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'pt-BR';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    utterance.onend = () => {
+      setSpeaking(null);
+    };
+
+    utterance.onerror = () => {
+      setSpeaking(null);
+    };
+
+    window.speechSynthesis.speak(utterance);
+    setSpeaking(messageId);
+    synthRef.current = window.speechSynthesis;
+  };
+
+  const handleTransformToRoadmap = async (messageContent: string) => {
+    const response = await apiRequest('/projects/init-roadmap', {
+      method: 'POST',
+      body: JSON.stringify({
+        projectId: null, // Será criado novo projeto
+        description: messageContent,
+      }),
+    });
+
+    if (response.ok) {
+      alert('Roadmap criado com sucesso!');
+      window.location.href = '/projects';
+    } else {
+      alert('Erro ao criar roadmap: ' + (response.error || 'Erro desconhecido'));
+    }
+  };
+
+  const handleCreateTasks = async (messageContent: string) => {
+    // Extrair tarefas do conteúdo da mensagem
+    const taskLines = messageContent
+      .split('\n')
+      .filter(line => line.trim().match(/^[-*•]\s|^\d+\.\s/))
+      .map(line => line.replace(/^[-*•]\s|^\d+\.\s/, '').trim())
+      .filter(line => line.length > 0);
+
+    if (taskLines.length === 0) {
+      alert('Não foi possível identificar tarefas na mensagem');
+      return;
+    }
+
+    // Criar tarefas
+    const createPromises = taskLines.map((title) =>
+      apiRequest('/tasks', {
+        method: 'POST',
+        body: JSON.stringify({
+          title,
+          description: `Criada a partir de: ${messageContent.substring(0, 100)}`,
+          status: 'backlog',
+        }),
+      })
+    );
+
+    const results = await Promise.all(createPromises);
+    const successCount = results.filter(r => r.ok).length;
+
+    if (successCount > 0) {
+      alert(`${successCount} tarefa(s) criada(s) com sucesso!`);
+      window.location.href = '/tasks';
+    } else {
+      alert('Erro ao criar tarefas');
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
@@ -149,26 +239,54 @@ export default function AI() {
                   </div>
                 )}
 
-                {messages.map((msg, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`flex ${
-                      msg.role === "user" ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-lg p-4 ${
-                        msg.role === "user"
-                          ? "bg-indigo-600 text-white"
-                          : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                {messages.map((msg, idx) => {
+                  const messageId = `msg-${idx}`;
+                  const isAI = msg.role !== "user";
+                  
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`flex ${
+                        msg.role === "user" ? "justify-end" : "justify-start"
                       }`}
                     >
-                      <p className="whitespace-pre-wrap">{msg.content}</p>
-                    </div>
-                  </motion.div>
-                ))}
+                      <div
+                        className={`max-w-[80%] rounded-lg p-4 ${
+                          msg.role === "user"
+                            ? "bg-indigo-600 text-white"
+                            : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                        }`}
+                      >
+                        <p className="whitespace-pre-wrap">{msg.content}</p>
+                        
+                        {isAI && (
+                          <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-300 dark:border-gray-600">
+                            <button
+                              onClick={() => speakText(msg.content, messageId)}
+                              className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center gap-1"
+                            >
+                              {speaking === messageId ? "⏸️ Parar" : "🔊 Ouvir"}
+                            </button>
+                            <button
+                              onClick={() => handleTransformToRoadmap(msg.content)}
+                              className="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                            >
+                              🗺️ Criar Roadmap
+                            </button>
+                            <button
+                              onClick={() => handleCreateTasks(msg.content)}
+                              className="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
+                            >
+                              ✅ Criar Tarefas
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
 
                 {loading && (
                   <div className="flex justify-start">
