@@ -37,8 +37,8 @@ serve(async (req) => {
       );
     }
 
-    const url = new URL(req.url);
-    const workspaceId = url.pathname.split("/").pop();
+    const body = await req.json();
+    const { workspaceId, path, content, commitOnSave } = body;
 
     if (!workspaceId) {
       return new Response(
@@ -49,9 +49,6 @@ serve(async (req) => {
         }
       );
     }
-
-    const body = await req.json();
-    const { path, content, commitOnSave } = body;
 
     if (!path || content === undefined) {
       return new Response(
