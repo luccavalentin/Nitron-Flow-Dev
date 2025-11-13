@@ -26,71 +26,56 @@ Todas as versões são controladas via Git/GitHub seguindo o padrão:
   /guias, prompts e comandos - Guias e especificações
 ```
 
-## 🚀 Deploy Rápido (Go Live)
+## 🚀 Como Executar Localmente
 
-### Opção 1: Vercel (Recomendado - Mais Rápido)
-
-1. **Conecte o repositório à Vercel:**
-
-   - Acesse [vercel.com](https://vercel.com)
-   - Importe este repositório GitHub
-   - Configure as variáveis de ambiente:
-     - `NEXT_PUBLIC_SUPABASE_URL`
-     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-     - `NEXT_PUBLIC_API_URL` (URL das Edge Functions)
-
-2. **Deploy automático:**
-
-   - A Vercel fará deploy automaticamente
-   - Você receberá uma URL: `https://seu-projeto.vercel.app`
-
-3. **Acesse o projeto:**
-   - A URL estará disponível imediatamente
-   - Faça login e comece a usar!
-
-### Opção 2: Deploy Manual
+### Passo 1: Configurar Variáveis de Ambiente
 
 ```bash
-# 1. Configure as variáveis de ambiente
 cd frontend
 cp .env.example .env.local
-# Edite .env.local com suas credenciais
-
-# 2. Instale dependências e faça build
-npm install
-npm run build
-
-# 3. Execute em produção
-npm start
 ```
 
-### Opção 3: Usando o Script
+Edite `frontend/.env.local` com suas credenciais do Supabase:
+```
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon_aqui
+NEXT_PUBLIC_API_URL=https://seu-projeto.supabase.co/functions/v1
+```
+
+### Passo 2: Instalar Dependências
 
 ```bash
-# Deploy em produção
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh production
-
-# Deploy em staging
-./scripts/deploy.sh staging
+cd frontend
+npm install
 ```
 
-## 📋 Pré-requisitos para Deploy
+### Passo 3: Executar o Projeto
 
-1. **Supabase configurado:**
+```bash
+# Modo desenvolvimento (com hot reload)
+npm run dev
 
-   - Execute `sql/nitronflow_schema.sql` no SQL Editor
-   - Crie os buckets no Storage
-   - Configure as Environment Variables
+# O projeto estará disponível em:
+# http://localhost:3000
+```
 
-2. **Edge Functions deployadas:**
+### Passo 4: Acessar o Projeto
 
-   - Veja `docs/DEPLOY.md` para instruções completas
+1. Abra seu navegador em `http://localhost:3000`
+2. Faça login ou crie uma conta
+3. Comece a usar o NitronFlow Dev!
 
-3. **Variáveis de ambiente:**
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `NEXT_PUBLIC_API_URL`
+## 📋 Pré-requisitos
+
+1. **Node.js instalado** (versão 18 ou superior)
+2. **Supabase configurado:**
+   - Execute `sql/nitronflow_schema.sql` no SQL Editor do Supabase
+   - Crie os buckets no Storage: `workspaces`, `snapshots`, `receipts`, `ai-uploads`, `backups`
+   - Configure as Environment Variables no Supabase
+
+3. **Edge Functions deployadas** (opcional para desenvolvimento local):
+   - Veja `docs/DEPLOY.md` para instruções de deploy das Edge Functions
+   - Para desenvolvimento, você pode testar localmente usando Supabase CLI
 
 ## Status de Implementação
 
@@ -111,7 +96,7 @@ chmod +x scripts/deploy.sh
 - Módulo Financeiro (sync Kiwify)
 - FINCORE AI (summary, distribute)
 - Ambiente de IA (chat)
-- **Sistema de Deploy e Go Live** 🚀
+- Sistema de Deploy (estrutura criada)
 
 ### 🟡 Em Progresso
 
@@ -131,15 +116,12 @@ chmod +x scripts/deploy.sh
 - `docs/PROXIMOS_PASSOS.md` - Roadmap de implementação
 - `guias, prompts e comandos/NITRONFLOW_DEV_ESPECIFICACAO_COMPLETA.md` - Especificação completa
 
-## 🎯 Como Visualizar o Projeto Localmente
+## 💡 Dicas
 
-1. Configure o Supabase (veja pré-requisitos acima)
-2. Configure as variáveis de ambiente no `.env.local`
-3. Execute `npm run dev` na pasta `frontend`
-4. Acesse `http://localhost:3000` no navegador
-5. Faça login e comece a usar!
-
-**Nota:** O botão "Go Live" na interface é para deploy futuro. Para desenvolvimento, use sempre `npm run dev` localmente.
+- Use `npm run dev` para desenvolvimento com hot reload
+- Use `npm run build && npm start` para testar em modo produção local
+- Todas as alterações são versionadas automaticamente no GitHub
+- O botão "Go Live" na interface é para deploy futuro (quando implementado)
 
 ## 📝 Notas
 
