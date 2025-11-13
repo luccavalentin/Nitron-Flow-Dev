@@ -32,11 +32,13 @@ export default function Dashboard() {
       // Verificar sessão dev primeiro se Supabase não estiver configurado
       if (!isSupabaseConfigured && isDevMode()) {
         if (!hasDevSession()) {
+          console.log('❌ Dashboard: Sem sessão dev, redirecionando para login')
           router.push('/auth/login')
           return
         }
+        console.log('✅ Dashboard: Sessão dev encontrada, carregando dados...')
         // Continuar carregando dados mesmo sem Supabase
-      } else {
+      } else if (isSupabaseConfigured) {
         // Verificar sessão Supabase apenas se estiver configurado
         const { data: { session } } = await supabase.auth.getSession()
         
@@ -44,6 +46,10 @@ export default function Dashboard() {
           router.push('/auth/login')
           return
         }
+      } else {
+        // Sem Supabase e não está em modo dev - redirecionar
+        router.push('/auth/login')
+        return
       }
 
       // Carregar dados do dashboard
