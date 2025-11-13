@@ -25,10 +25,9 @@ export default function ProjectDetail() {
   }, [id]);
 
   const loadProject = async () => {
-    const response = await apiRequest("/projects");
+    const response = await apiRequest(`/projects/get-by-id?id=${id}`);
     if (response.ok && response.data) {
-      const found = response.data.find((p: any) => p.id === id);
-      setProject(found);
+      setProject(response.data);
     }
   };
 
@@ -40,29 +39,33 @@ export default function ProjectDetail() {
   };
 
   const loadRoadmap = async () => {
-    // TODO: Implementar endpoint de roadmap
-    setRoadmap([]);
+    const response = await apiRequest(`/roadmap/get?projectId=${id}`);
+    if (response.ok && response.data) {
+      setRoadmap(response.data);
+    }
   };
 
   const loadDeployments = async () => {
-    // TODO: Implementar endpoint de deployments
-    setDeployments([]);
+    const response = await apiRequest(`/deployments/get?projectId=${id}`);
+    if (response.ok && response.data) {
+      setDeployments(response.data);
+    }
   };
 
   const handleDeploy = async (environment: string) => {
     if (!confirm(`Confirmar deploy para ${environment}?`)) return;
 
     setDeploying(true);
-    const response = await apiRequest("/deploy", {
+    const response = await apiRequest("/deploy/start", {
       method: "POST",
       body: JSON.stringify({
-        projectId: id,
+        project_id: id,
         environment,
       }),
     });
 
     if (response.ok) {
-      alert(`Deploy iniciado! URL: ${response.data.preview_url}`);
+      alert(`Deploy iniciado! URL: ${response.data?.preview_url || "Em processamento..."}`);
       loadDeployments();
     } else {
       alert(`Erro: ${response.error}`);
