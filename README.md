@@ -81,7 +81,7 @@ npm run dev
 
 ## 📊 Status de Implementação
 
-**Versão Atual: V41** | **Progresso: 85% Completo**
+**Versão Atual: V105** | **Progresso: 92% Completo**
 
 ### ✅ Implementado (30+ Edge Functions, 15+ Páginas)
 
@@ -142,12 +142,26 @@ npm run dev
 
 ## 📚 Documentação
 
-- **`EXECUTAR_AGORA.md`** ⚡ - Guia rápido para executar o projeto
-- **`STATUS_IMPLEMENTACAO.md`** 📊 - Status detalhado de todas as funcionalidades
-- **`PROGRESSO_VISUAL.md`** 📈 - Progresso visual do projeto
-- `docs/DEPLOY.md` - Guia completo de deploy
-- `docs/PROXIMOS_PASSOS.md` - Roadmap de implementação
-- `guias, prompts e comandos/NITRONFLOW_DEV_ESPECIFICACAO_COMPLETA.md` - Especificação completa
+### Documentação Principal
+- **`docs/DOCUMENTACAO_COMPLETA.md`** 📚 - **DOCUMENTAÇÃO MESTRE COMPLETA**
+- **`docs/HISTORICO_MUDANCAS.md`** 📝 - Histórico completo de todas as mudanças
+- **`REVISAO_ESPECIFICACAO_COMPLETA.md`** ✅ - Revisão detalhada vs especificação
+- **`STATUS_FINAL.md`** 📊 - Status consolidado do sistema
+
+### Guias de Setup
+- **`docs/readme_setup.md`** 🚀 - Guia completo de setup passo a passo
+- **`docs/QUICK_START.md`** ⚡ - Guia rápido para começar
+- **`docs/DEPLOY.md`** 🚢 - Guia de deploy em produção
+
+### Referências Técnicas
+- **`docs/api_reference.md`** 🔌 - Referência completa da API
+- **`docs/ui_specs.md`** 🎨 - Especificações de UI detalhadas
+- **`docs/edge_functions.md`** ⚙️ - Documentação técnica das Edge Functions
+- **`docs/qa_checklist.md`** ✅ - Checklist completo de QA
+- **`docs/WORKSPACE_SETUP.md`** 💻 - Setup do workspace
+
+### Especificação Original
+- `guias, prompts e comandos/NITRONFLOW_DEV_ESPECIFICACAO_COMPLETA.md` - Especificação completa original
 
 ## 💡 Dicas
 
