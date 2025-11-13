@@ -74,9 +74,36 @@ export default function Receipts() {
                           {new Date(receipt.created_at).toLocaleDateString("pt-BR")}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <button className="text-indigo-600 dark:text-indigo-400 hover:underline">
-                            Download
-                          </button>
+                          <div className="flex gap-3">
+                            <button
+                              onClick={() => {
+                                if (receipt.receipt_path) {
+                                  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/receipts/${receipt.receipt_path}`;
+                                  window.open(url, "_blank");
+                                } else {
+                                  alert("Recibo ainda não foi gerado. Gerando...");
+                                  // Gerar recibo se não existir
+                                  apiRequest("/receipts/generate", {
+                                    method: "POST",
+                                    body: JSON.stringify({
+                                      paymentId: receipt.payment_id,
+                                      receiptData: {
+                                        amount: receipt.amount,
+                                        client: receipt.clients?.name,
+                                      },
+                                    }),
+                                  }).then((res) => {
+                                    if (res.ok && res.data?.download_url) {
+                                      window.open(res.data.download_url, "_blank");
+                                    }
+                                  });
+                                }
+                              }}
+                              className="text-indigo-600 dark:text-indigo-400 hover:underline"
+                            >
+                              📥 Download
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}

@@ -112,19 +112,29 @@ export const tasksApi = {
 }
 
 export const budgetsApi = {
-  getAll: (projectId?: string, clientId?: string) => {
-    const params = new URLSearchParams()
-    if (projectId) params.append('projectId', projectId)
-    if (clientId) params.append('clientId', clientId)
-    const url = `/budgets/get${params.toString() ? `?${params.toString()}` : ''}`
-    return apiRequest(url)
-  },
-  create: (data: any) => apiRequest('/budgets/create', { method: 'POST', body: JSON.stringify(data) }),
-}
+      getAll: (projectId?: string, clientId?: string) => {
+        const params = new URLSearchParams()
+        if (projectId) params.append('projectId', projectId)
+        if (clientId) params.append('clientId', clientId)
+        const url = `/budgets/get${params.toString() ? `?${params.toString()}` : ''}`
+        return apiRequest(url)
+      },
+      create: (data: any) => apiRequest('/budgets/create', { method: 'POST', body: JSON.stringify(data) }),
+      send: (budgetId: string, recipientEmail: string) => 
+        apiRequest('/budgets/send', { 
+          method: 'POST', 
+          body: JSON.stringify({ budgetId, recipientEmail }) 
+        }),
+    }
 
 export const receiptsApi = {
-  getAll: () => apiRequest('/receipts/get'),
-}
+      getAll: () => apiRequest('/receipts/get'),
+      generate: (paymentId: string, receiptData: any) =>
+        apiRequest('/receipts/generate', {
+          method: 'POST',
+          body: JSON.stringify({ paymentId, receiptData }),
+        }),
+    }
 
 export const financeApi = {
       getProducts: () => apiRequest('/finance/products'),
