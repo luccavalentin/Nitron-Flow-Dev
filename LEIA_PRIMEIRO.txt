@@ -1,0 +1,76 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║     🚀 NITRONFLOW DEV - COMO VER O SISTEMA FUNCIONANDO      ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+⚠️  VOCÊ ESTÁ VENDO APENAS ARQUIVOS, NÃO O SISTEMA!
+
+Para ver o sistema funcionando com todas as telas:
+
+═══════════════════════════════════════════════════════════════
+
+📋 OPÇÃO 1: SCRIPT AUTOMÁTICO (MAIS FÁCIL)
+
+Windows:
+  1. Clique duas vezes em: INICIAR_SISTEMA.bat
+  2. Aguarde instalar dependências (primeira vez)
+  3. Abra: http://localhost:3000
+
+Linux/Mac:
+  1. Execute: ./INICIAR_SISTEMA.sh
+  2. Aguarde instalar dependências (primeira vez)
+  3. Abra: http://localhost:3000
+
+═══════════════════════════════════════════════════════════════
+
+📋 OPÇÃO 2: MANUAL
+
+1. Abra o Terminal/Git Bash na pasta do projeto
+
+2. Configure o Supabase (se ainda não fez):
+   - Acesse https://supabase.com
+   - Crie um projeto
+   - Execute sql/nitronflow_schema.sql no SQL Editor
+   - Crie os buckets no Storage
+
+3. Configure as variáveis:
+   - Crie: frontend/.env.local
+   - Copie de: frontend/.env.local.example
+   - Preencha com suas credenciais do Supabase
+
+4. Instale e execute:
+   cd frontend
+   npm install
+   npm run dev
+
+5. Abra no navegador:
+   http://localhost:3000
+
+═══════════════════════════════════════════════════════════════
+
+✅ O QUE VOCÊ VERÁ:
+
+- Tela de Login moderna
+- Dashboard com estatísticas
+- Menu lateral completo
+- Página de Projetos (criar, listar, editar)
+- Página de Clientes (criar, listar, editar)
+- Kanban de Tarefas (drag & drop)
+- Módulo Financeiro
+- FINCORE AI
+- Ambiente de IA
+- Configurações
+
+═══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTAÇÃO COMPLETA:
+
+- VER_SISTEMA_AGORA.md - Guia detalhado
+- EXECUTAR_AGORA.md - Guia rápido
+- COMECE_AQUI.md - Primeiros passos
+
+═══════════════════════════════════════════════════════════════
+
+🎯 RESULTADO: Sistema web completo e funcional!
+
