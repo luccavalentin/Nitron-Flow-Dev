@@ -78,7 +78,9 @@ serve(async (req) => {
       insights.push({
         type: "warning",
         title: "Saldo Baixo",
-        message: `Seu saldo atual é R$ ${totalBalance.toFixed(2)}. Considere aumentar suas receitas ou reduzir gastos.`,
+        message: `Seu saldo atual é R$ ${totalBalance.toFixed(
+          2
+        )}. Considere aumentar suas receitas ou reduzir gastos.`,
       });
     }
 
@@ -101,7 +103,9 @@ serve(async (req) => {
       insights.push({
         type: "success",
         title: "Maior Fundo",
-        message: `${largestFund.name} tem R$ ${parseFloat(largestFund.balance || "0").toFixed(2)}.`,
+        message: `${largestFund.name} tem R$ ${parseFloat(
+          largestFund.balance || "0"
+        ).toFixed(2)}.`,
       });
     }
 
@@ -133,4 +137,3 @@ serve(async (req) => {
     });
   }
 });
-
