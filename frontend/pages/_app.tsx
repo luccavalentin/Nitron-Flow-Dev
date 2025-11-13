@@ -9,19 +9,26 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     setMounted(true)
     
-    // Verificar sessão
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session && window.location.pathname !== '/auth/login') {
-        window.location.href = '/auth/login'
-      }
-    })
+    // Verificar sessão apenas no cliente
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname
+      const publicPaths = ['/auth/login', '/auth/callback']
+      
+      if (!publicPaths.includes(currentPath)) {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!session) {
+            window.location.href = '/auth/login'
+          }
+        })
 
-    // Listener de mudanças de auth
-    supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session && window.location.pathname !== '/auth/login') {
-        window.location.href = '/auth/login'
+        // Listener de mudanças de auth
+        supabase.auth.onAuthStateChange((_event, session) => {
+          if (!session && !publicPaths.includes(currentPath)) {
+            window.location.href = '/auth/login'
+          }
+        })
       }
-    })
+    }
   }, [])
 
   if (!mounted) return null
