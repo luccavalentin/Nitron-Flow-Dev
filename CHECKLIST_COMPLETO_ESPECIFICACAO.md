@@ -60,11 +60,11 @@
 - [x] `workspace/commit` ✅
 - [ ] Integração completa code-server (estrutura criada, falta configurar)
 
-### ✅ Roadmap (100% - 1/1)
+### ✅ Roadmap (100% - 4/4)
 - [x] `roadmap/get` ✅
-- [ ] `roadmap/create` - **FALTANDO**
-- [ ] `roadmap/update` - **FALTANDO**
-- [ ] `roadmap/delete` - **FALTANDO**
+- [x] `roadmap/create` ✅
+- [x] `roadmap/update` ✅
+- [x] `roadmap/delete` ✅
 
 ### 🟡 GitHub (67% - 2/3)
 - [x] `github/connect` ✅
@@ -76,10 +76,10 @@
 - [x] `supabase/projects` ✅
 - [ ] `supabase/delete` - **FALTANDO**
 
-### 🟡 Deploy (50% - 2/4)
+### 🟡 Deploy (75% - 3/4)
 - [x] `deploy/start` ✅
 - [x] `deployments/get` ✅
-- [ ] `deploy/debug` - **FALTANDO**
+- [x] `deploy/debug` ✅
 - [ ] `deploy/logs` - **FALTANDO**
 
 ### ✅ Finance / FINCORE (100% - 8/8)
@@ -92,33 +92,28 @@
 - [x] `fincore/simulate` ✅
 - [x] `fincore/insights` ✅
 
-### 🟡 Budgets & Receipts (50% - 2/4)
+### ✅ Budgets & Receipts (100% - 4/4)
 - [x] `budgets/create` ✅
 - [x] `budgets/get` ✅
-- [ ] `budgets/send` - **FALTANDO** (enviar por email)
+- [x] `budgets/send` ✅
 - [x] `receipts/get` ✅
-- [ ] `receipts/generate` - **FALTANDO** (gerar PDF)
+- [x] `receipts/generate` ✅
 
-### 🟡 AI (33% - 1/3)
+### 🟡 AI (67% - 2/3)
 - [x] `ai/chat` ✅
-- [ ] `ai/stt` - **FALTANDO** (Speech to text)
+- [x] `ai/stt` ✅
 - [ ] `creative_sessions` - **FALTANDO** (GET/POST)
 
-### ⏳ Backup (0% - 0/1)
-- [ ] `backup/run` - **FALTANDO**
+### ✅ Backup (100% - 1/1)
+- [x] `backup/run` ✅
 
-**Status:** 🟡 **85% COMPLETO** - 39/46 Edge Functions implementadas
+**Status:** ✅ **93% COMPLETO** - 44/46 Edge Functions implementadas
 
-**Faltam:**
-- `roadmap/create`, `roadmap/update`, `roadmap/delete`
-- `github/commit-push` (específico)
+**Faltam apenas:**
+- `github/commit-push` (específico - existe `workspace/commit` genérico)
 - `supabase/delete`
-- `deploy/debug`, `deploy/logs`
-- `budgets/send`
-- `receipts/generate`
-- `ai/stt`
+- `deploy/logs`
 - `creative_sessions` (GET/POST)
-- `backup/run`
 
 ---
 
@@ -402,7 +397,7 @@
 | Categoria | Completo | Total | % | Status |
 |-----------|----------|-------|---|--------|
 | **Infraestrutura** | 3/3 | 3 | **100%** | ✅ |
-| **Edge Functions** | 39/46 | 46 | **85%** | 🟡 |
+| **Edge Functions** | 44/46 | 46 | **96%** | ✅ |
 | **Frontend - Telas** | 15/16 | 16 | **94%** | ✅ |
 | **Componentes** | 8/12 | 12 | **67%** | 🟡 |
 | **Integrações** | 3/6 | 6 | **50%** | 🟡 |
@@ -413,20 +408,20 @@
 | **Documentação** | 4/10 | 10 | **40%** | 🟡 |
 | **QA/Testes** | 0/5 | 5 | **0%** | ⏳ |
 
-### **PROGRESSO GERAL: 68% COMPLETO**
+### **PROGRESSO GERAL: 75% COMPLETO**
 
 ---
 
 ## 🎯 ONDE PAROU - PRÓXIMOS PASSOS PRIORITÁRIOS
 
-### 🔴 CRÍTICO (Fazer Agora)
-1. **Completar Edge Functions faltantes** (7 funções)
-   - `roadmap/create`, `roadmap/update`, `roadmap/delete`
-   - `deploy/debug`
-   - `budgets/send`
-   - `receipts/generate`
-   - `ai/stt`
-   - `backup/run`
+### ✅ CRÍTICO (CONCLUÍDO)
+1. ~~**Completar Edge Functions faltantes**~~ ✅ **CONCLUÍDO**
+   - ✅ `roadmap/create`, `roadmap/update`, `roadmap/delete`
+   - ✅ `deploy/debug`
+   - ✅ `budgets/send`
+   - ✅ `receipts/generate`
+   - ✅ `ai/stt`
+   - ✅ `backup/run`
 
 2. **Melhorar Frontend - Funcionalidades Faltantes**
    - Gráficos no Dashboard
