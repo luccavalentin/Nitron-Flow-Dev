@@ -1,0 +1,37 @@
+═══════════════════════════════════════════════════════════════
+  NITRONFLOW DEV - EXECUTAR LOCALMENTE
+═══════════════════════════════════════════════════════════════
+
+PASSO 1: Configure o Supabase
+────────────────────────────────
+1. Acesse supabase.com e crie um projeto
+2. Execute o SQL: sql/nitronflow_schema.sql
+3. Crie os buckets: workspaces, snapshots, receipts, ai-uploads, backups
+
+PASSO 2: Configure Variáveis de Ambiente
+─────────────────────────────────────────
+Crie o arquivo: frontend/.env.local
+
+Conteúdo:
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon_aqui
+NEXT_PUBLIC_API_URL=https://seu-projeto.supabase.co/functions/v1
+
+PASSO 3: Execute o Projeto
+───────────────────────────
+Opção A (Windows):
+  scripts\start-local.bat
+
+Opção B (Manual):
+  cd frontend
+  npm install
+  npm run dev
+
+PASSO 4: Acesse no Navegador
+─────────────────────────────
+Abra: http://localhost:3000
+
+═══════════════════════════════════════════════════════════════
+PRONTO! Agora você pode visualizar o projeto localmente.
+═══════════════════════════════════════════════════════════════
+
