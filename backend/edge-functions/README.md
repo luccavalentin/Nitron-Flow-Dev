@@ -10,11 +10,14 @@ Cada função deve:
 - Usar `service_role` apenas server-side para Management API
 - Registrar telemetria em `telemetry_events` quando necessário
 
+## Funções implementadas
+
+- ✅ `projects/get` - Lista projetos do usuário
+- ✅ `projects/create` - Criar projeto
+- ✅ `projects/init-roadmap` - Inicializar roadmap
+
 ## Funções a implementar
 
-- `projects/get` - Lista projetos do usuário
-- `projects/create` - Criar projeto
-- `projects/init-roadmap` - Inicializar roadmap
 - `clients/*` - CRUD de clientes
 - `tasks/*` - CRUD de tarefas
 - `workspace/patch` - Sincronizar arquivos
@@ -28,3 +31,10 @@ Cada função deve:
 - `ai/chat` - Chat com IA
 - `ai/stt` - Speech to text
 
+## Como deployar
+
+```bash
+supabase functions deploy projects/get
+supabase functions deploy projects/create
+supabase functions deploy projects/init-roadmap
+```
