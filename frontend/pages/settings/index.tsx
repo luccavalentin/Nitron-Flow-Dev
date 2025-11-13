@@ -358,6 +358,7 @@ export default function Settings() {
                         localStorage.removeItem('nitronflow_payments')
                         localStorage.removeItem('nitronflow_licenses')
                         localStorage.removeItem('nitronflow_activities')
+                        localStorage.removeItem('nitronflow_roadmap')
                         setSuccess('Dados locais limpos! Recarregando...')
                         setTimeout(() => window.location.reload(), 1500)
                       }}

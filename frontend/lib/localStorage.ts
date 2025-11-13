@@ -12,6 +12,7 @@ const STORAGE_KEYS = {
   payments: 'nitronflow_payments',
   licenses: 'nitronflow_licenses',
   activities: 'nitronflow_activities',
+  roadmap: 'nitronflow_roadmap',
 }
 
 export const localStorageService = {
@@ -130,6 +131,21 @@ export const localStorageService = {
   getActivities: (): any[] => {
     if (typeof window !== 'undefined') {
       const data = localStorage.getItem(STORAGE_KEYS.activities)
+      return data ? JSON.parse(data) : []
+    }
+    return []
+  },
+
+  // Roadmap
+  saveRoadmap: (roadmap: any[]) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.roadmap, JSON.stringify(roadmap))
+    }
+  },
+
+  getRoadmap: (): any[] => {
+    if (typeof window !== 'undefined') {
+      const data = localStorage.getItem(STORAGE_KEYS.roadmap)
       return data ? JSON.parse(data) : []
     }
     return []

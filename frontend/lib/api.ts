@@ -82,6 +82,66 @@ export async function apiRequest<T = any>(
         if (options?.method === 'GET' || !options?.method) {
           return { ok: true, data: localStorageService.getActivities() }
         }
+      } else if (endpoint.includes('/roadmap')) {
+        const roadmap = localStorageService.getRoadmap()
+        
+        // GET - filtrar por projectId se fornecido
+        if (options?.method === 'GET' || !options?.method) {
+          const url = new URL(endpoint, 'http://localhost')
+          const projectId = url.searchParams.get('projectId')
+          
+          if (projectId) {
+            const filtered = roadmap.filter((item: any) => item.project_id === projectId)
+            return { ok: true, data: filtered }
+          }
+          return { ok: true, data: roadmap }
+        }
+        
+        // POST - criar novo roadmap item
+        if (options?.method === 'POST') {
+          try {
+            const body = JSON.parse(options.body as string)
+            const newItem = {
+              id: `roadmap-${Date.now()}`,
+              ...body,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            }
+            roadmap.push(newItem)
+            localStorageService.saveRoadmap(roadmap)
+            return { ok: true, data: newItem }
+          } catch (e) {
+            return { ok: false, error: 'Erro ao criar roadmap item' }
+          }
+        }
+        
+        // PUT - atualizar roadmap item
+        if (options?.method === 'PUT') {
+          try {
+            const body = JSON.parse(options.body as string)
+            const index = roadmap.findIndex((item: any) => item.id === body.id)
+            if (index !== -1) {
+              roadmap[index] = { ...roadmap[index], ...body, updated_at: new Date().toISOString() }
+              localStorageService.saveRoadmap(roadmap)
+              return { ok: true, data: roadmap[index] }
+            }
+            return { ok: false, error: 'Roadmap item não encontrado' }
+          } catch (e) {
+            return { ok: false, error: 'Erro ao atualizar roadmap item' }
+          }
+        }
+        
+        // DELETE - deletar roadmap item
+        if (options?.method === 'DELETE') {
+          try {
+            const body = JSON.parse(options.body as string)
+            const filtered = roadmap.filter((item: any) => item.id !== body.id)
+            localStorageService.saveRoadmap(filtered)
+            return { ok: true, data: { id: body.id } }
+          } catch (e) {
+            return { ok: false, error: 'Erro ao deletar roadmap item' }
+          }
+        }
       }
       
       return { ok: true, data: [] }
@@ -323,6 +383,56 @@ export const activitiesApi = {
     const response = await apiRequest(url)
     if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
       localStorageService.saveActivities(Array.isArray(response.data) ? response.data : [])
+    }
+    return response
+  },
+}
+
+export const roadmapApi = {
+  getAll: async (projectId?: string) => {
+    const url = projectId ? `/roadmap/get?projectId=${projectId}` : '/roadmap/get'
+    const response = await apiRequest(url)
+    if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
+      localStorageService.saveRoadmap(Array.isArray(response.data) ? response.data : [])
+    }
+    return response
+  },
+  create: async (data: any) => {
+    const response = await apiRequest('/roadmap/create', { method: 'POST', body: JSON.stringify(data) })
+    if (isDevMode() && !isSupabaseConfigured) {
+      if (!response.ok || !response.data) {
+        const roadmap = localStorageService.getRoadmap()
+        const newItem = { ...data, id: `roadmap-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        roadmap.push(newItem)
+        localStorageService.saveRoadmap(roadmap)
+        return { ok: true, data: newItem }
+      } else {
+        const roadmap = localStorageService.getRoadmap()
+        const newItem = { ...data, id: response.data.id || `roadmap-${Date.now()}`, created_at: new Date().toISOString() }
+        roadmap.push(newItem)
+        localStorageService.saveRoadmap(roadmap)
+        return { ...response, data: newItem }
+      }
+    }
+    return response
+  },
+  update: async (id: string, data: any) => {
+    const response = await apiRequest('/roadmap/update', { method: 'PUT', body: JSON.stringify({ id, ...data }) })
+    if (response.ok && isDevMode() && !isSupabaseConfigured) {
+      const roadmap = localStorageService.getRoadmap()
+      const index = roadmap.findIndex((item: any) => item.id === id)
+      if (index !== -1) {
+        roadmap[index] = { ...roadmap[index], ...data, updated_at: new Date().toISOString() }
+        localStorageService.saveRoadmap(roadmap)
+      }
+    }
+    return response
+  },
+  delete: async (id: string) => {
+    const response = await apiRequest('/roadmap/delete', { method: 'DELETE', body: JSON.stringify({ id }) })
+    if (response.ok && isDevMode() && !isSupabaseConfigured) {
+      const roadmap = localStorageService.getRoadmap().filter((item: any) => item.id !== id)
+      localStorageService.saveRoadmap(roadmap)
     }
     return response
   },
