@@ -1,12 +1,23 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { isDevMode, hasDevSession } from "@/lib/dev-mode";
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
     const checkSession = async () => {
+      // Modo de desenvolvimento
+      if (!isSupabaseConfigured && isDevMode()) {
+        if (hasDevSession()) {
+          router.push("/dashboard");
+        } else {
+          router.push("/auth/login");
+        }
+        return;
+      }
+      
       const {
         data: { session },
       } = await supabase.auth.getSession();

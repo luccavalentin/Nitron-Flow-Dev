@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { isDevMode, getDevSession } from "@/lib/dev-mode";
 import { useRouter } from "next/router";
 
 export default function Header() {
@@ -13,6 +14,15 @@ export default function Header() {
   }, []);
 
   const loadUser = async () => {
+    // Modo de desenvolvimento
+    if (!isSupabaseConfigured && isDevMode()) {
+      const devSession = getDevSession();
+      if (devSession) {
+        setUser(devSession.user);
+      }
+      return;
+    }
+    
     const {
       data: { user: currentUser },
     } = await supabase.auth.getUser();
@@ -35,6 +45,14 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
+    // Modo de desenvolvimento
+    if (!isSupabaseConfigured && isDevMode()) {
+      const { clearDevSession } = await import("@/lib/dev-mode");
+      clearDevSession();
+      router.push("/auth/login");
+      return;
+    }
+    
     await supabase.auth.signOut();
     router.push("/auth/login");
   };

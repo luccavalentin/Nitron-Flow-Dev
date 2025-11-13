@@ -1,4 +1,5 @@
-import { supabase } from './supabase'
+import { supabase, isSupabaseConfigured } from './supabase'
+import { isDevMode, getDevSession } from './dev-mode'
 
 export interface ApiResponse<T = any> {
   ok: boolean
@@ -15,6 +16,44 @@ export async function apiRequest<T = any>(
   endpoint: string,
   options?: RequestInit
 ): Promise<ApiResponse<T>> {
+  // Modo de desenvolvimento: usar sessão fake
+  if (isDevMode() && !isSupabaseConfigured) {
+    const devSession = getDevSession()
+    if (!devSession) {
+      return { ok: false, error: 'Não autenticado' }
+    }
+    
+    // Em dev mode, retornar dados mockados ou permitir requisições sem auth
+    // Por enquanto, vamos permitir mas sem token real
+    const apiUrl = getApiUrl()
+    const fullUrl = endpoint.startsWith('http') 
+      ? endpoint 
+      : `${apiUrl}${endpoint}`
+    
+    try {
+      const response = await fetch(fullUrl, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Dev-Mode': 'true',
+          'X-Dev-User': devSession.user.email,
+          ...options?.headers,
+        },
+      })
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Erro na requisição' }))
+        return { ok: false, error: error.error || error.message || 'Erro desconhecido' }
+      }
+      
+      const result = await response.json()
+      return result
+    } catch (error: any) {
+      // Em dev mode, se a API não estiver disponível, retornar dados mockados
+      return { ok: true, data: [] }
+    }
+  }
+  
   const { data: { session } } = await supabase.auth.getSession()
   
   if (!session) {
