@@ -75,12 +75,12 @@ export default function Workspace() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen">
         <Sidebar />
         <div className="flex-1 flex flex-col">
           <Header />
           <main className="flex-1 p-8">
-            <div className="text-center py-12">Carregando...</div>
+            <div className="text-center py-12 text-slate-400">Carregando...</div>
           </main>
         </div>
       </div>
@@ -88,27 +88,27 @@ export default function Workspace() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
         <main className="flex-1 flex flex-col overflow-hidden">
-          <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3 flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <div className="bg-slate-900 border-b border-slate-800 px-6 py-3 flex items-center justify-between">
+            <h1 className="text-xl font-semibold text-slate-200">
               {workspace?.name || "Workspace"}
             </h1>
             <div className="flex items-center space-x-3">
               <button
                 onClick={handleSnapshot}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm"
+                className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all text-sm shadow-lg shadow-cyan-500/30"
               >
-                Criar Snapshot
+                📸 Criar Snapshot
               </button>
               <button
                 onClick={handleCommit}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
+                className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors text-sm"
               >
-                Commit & Push
+                💾 Commit & Push
               </button>
             </div>
           </div>
@@ -123,10 +123,10 @@ export default function Workspace() {
             ) : (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
+                  <p className="text-slate-400 mb-4">
                     Code-server não configurado
                   </p>
-                  <p className="text-sm text-gray-400 dark:text-gray-500">
+                  <p className="text-sm text-slate-500">
                     Configure o code-server para visualizar o editor
                   </p>
                 </div>
@@ -134,15 +134,15 @@ export default function Workspace() {
             )}
           </div>
 
-          <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-slate-900 border-t border-slate-800 p-4">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-sm font-medium text-gray-900 dark:text-white">
+              <h2 className="text-sm font-medium text-slate-200">
                 Snapshots ({snapshots.length})
               </h2>
               {snapshots.length > 0 && (
                 <button
                   onClick={loadSnapshots}
-                  className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                  className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
                 >
                   Atualizar
                 </button>
@@ -153,18 +153,18 @@ export default function Workspace() {
                 {snapshots.map((snapshot) => (
                   <div
                     key={snapshot.id}
-                    className="flex-shrink-0 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    className="flex-shrink-0 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 cursor-pointer hover:bg-slate-700 hover:border-cyan-500/50 transition-all"
                     title={new Date(snapshot.created_at).toLocaleString("pt-BR")}
                   >
                     <div className="font-medium">{snapshot.name}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-slate-400">
                       {new Date(snapshot.created_at).toLocaleDateString("pt-BR")}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-slate-400">
                 Nenhum snapshot criado ainda
               </p>
             )}

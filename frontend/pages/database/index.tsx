@@ -66,43 +66,60 @@ export default function Database() {
     setQuery(template);
   };
 
+  const [tables, setTables] = useState<string[]>([]);
+  const [selectedTable, setSelectedTable] = useState<string>("");
+
+  useEffect(() => {
+    if (selectedConnection) {
+      // Carregar tabelas (simulado)
+      setTables(["projects", "clients", "tasks", "budgets", "receipts", "payments", "licenses"]);
+    }
+  }, [selectedConnection]);
+
+  const handleViewTable = (tableName: string) => {
+    setSelectedTable(tableName);
+    setQuery(`SELECT * FROM ${tableName} LIMIT 100;`);
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold gradient-text mb-2">Banco de Dados</h1>
+              <p className="text-sm text-slate-400">Execute queries e gerencie conexões Supabase</p>
+            </div>
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Banco de Dados
-              </h1>
+              <div></div>
               <button
                 onClick={() => setShowModal(true)}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/30"
               >
-                Conectar Novo Banco
+                + Conectar Novo Banco
               </button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-1">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <div className="card-modern p-5 mb-4">
+                  <h2 className="text-sm font-medium text-slate-300 mb-4">
                     Conexões
                   </h2>
                   {loading ? (
-                    <div className="text-center py-4">Carregando...</div>
+                    <div className="text-center py-4 text-slate-400">Carregando...</div>
                   ) : connections.length === 0 ? (
                     <div className="text-center py-8">
-                      <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                      <p className="text-slate-400 text-sm mb-4">
                         Nenhuma conexão
                       </p>
                       <button
                         onClick={() => setShowModal(true)}
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm"
+                        className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 text-sm transition-all"
                       >
-                        Conectar Primeiro Banco
+                        Conectar Banco
                       </button>
                     </div>
                   ) : (
@@ -111,16 +128,16 @@ export default function Database() {
                         <button
                           key={conn.id}
                           onClick={() => setSelectedConnection(conn)}
-                          className={`w-full text-left p-3 rounded-lg transition-colors ${
+                          className={`w-full text-left p-3 rounded-lg transition-all ${
                             selectedConnection?.id === conn.id
-                              ? "bg-indigo-50 dark:bg-indigo-900/20 border-2 border-indigo-500"
-                              : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/50 text-cyan-300"
+                              : "bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300"
                           }`}
                         >
-                          <p className="font-medium text-gray-900 dark:text-white">
+                          <p className="font-medium text-sm">
                             {conn.project_ref || "Projeto"}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-xs text-slate-500 mt-1 truncate">
                             {conn.url}
                           </p>
                         </button>
@@ -128,17 +145,40 @@ export default function Database() {
                     </div>
                   )}
                 </div>
+
+                {selectedConnection && tables.length > 0 && (
+                  <div className="card-modern p-5">
+                    <h2 className="text-sm font-medium text-slate-300 mb-4">
+                      Tabelas
+                    </h2>
+                    <div className="space-y-1">
+                      {tables.map((table) => (
+                        <button
+                          key={table}
+                          onClick={() => handleViewTable(table)}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                            selectedTable === table
+                              ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/50 text-cyan-300"
+                              : "bg-slate-800 hover:bg-slate-700 text-slate-300"
+                          }`}
+                        >
+                          {table}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div className="lg:col-span-2">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="lg:col-span-3">
+                <div className="card-modern p-5">
+                  <h2 className="text-sm font-medium text-slate-300 mb-4">
                     Query Editor
                   </h2>
 
                   {!selectedConnection ? (
                     <div className="text-center py-12">
-                      <p className="text-gray-500 dark:text-gray-400 mb-4">
+                      <p className="text-slate-400 mb-4">
                         Selecione uma conexão para executar queries
                       </p>
                     </div>
@@ -146,31 +186,31 @@ export default function Database() {
                     <>
                       <div className="mb-4">
                         <div className="flex items-center justify-between mb-2">
-                          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          <label className="text-sm font-medium text-slate-300">
                             SQL Query
                           </label>
                           <div className="flex gap-2">
                             <button
                               onClick={() => insertQuickQuery("SELECT * FROM projects LIMIT 10;")}
-                              className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                              className="px-2 py-1 text-xs bg-slate-800 border border-slate-700 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
                             >
                               SELECT
                             </button>
                             <button
                               onClick={() => insertQuickQuery("INSERT INTO projects (name, status) VALUES ('Novo Projeto', 'draft');")}
-                              className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                              className="px-2 py-1 text-xs bg-slate-800 border border-slate-700 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
                             >
                               INSERT
                             </button>
                             <button
                               onClick={() => insertQuickQuery("UPDATE projects SET status = 'active' WHERE id = '...';")}
-                              className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                              className="px-2 py-1 text-xs bg-slate-800 border border-slate-700 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
                             >
                               UPDATE
                             </button>
                             <button
                               onClick={() => insertQuickQuery("DELETE FROM projects WHERE id = '...';")}
-                              className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                              className="px-2 py-1 text-xs bg-slate-800 border border-slate-700 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
                             >
                               DELETE
                             </button>
@@ -179,19 +219,19 @@ export default function Database() {
                         <textarea
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
-                          className="w-full h-48 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full h-48 px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
                           placeholder="SELECT * FROM projects;"
                           spellCheck={false}
                         />
                         {queryHistory.length > 0 && (
                           <div className="mt-2">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Histórico:</p>
+                            <p className="text-xs text-slate-500 mb-1">Histórico:</p>
                             <div className="flex flex-wrap gap-1">
                               {queryHistory.slice(0, 5).map((histQuery, idx) => (
                                 <button
                                   key={idx}
                                   onClick={() => setQuery(histQuery)}
-                                  className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded hover:bg-gray-200 dark:hover:bg-gray-600 truncate max-w-xs"
+                                  className="px-2 py-1 text-xs bg-slate-800 border border-slate-700 text-slate-400 rounded-lg hover:bg-slate-700 hover:text-slate-200 transition-colors truncate max-w-xs"
                                   title={histQuery}
                                 >
                                   {histQuery.substring(0, 30)}...
@@ -202,15 +242,15 @@ export default function Database() {
                         )}
                       </div>
                       <div className="flex justify-between items-center mb-4">
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                        <div className="text-xs text-slate-500">
                           {selectedConnection?.project_ref && (
-                            <span>Conectado: {selectedConnection.project_ref}</span>
+                            <span>Conectado: <span className="text-cyan-400">{selectedConnection.project_ref}</span></span>
                           )}
                         </div>
                         <button
                           onClick={handleExecuteQuery}
                           disabled={executing || !query.trim()}
-                          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+                          className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/30"
                         >
                           {executing ? (
                             <>
@@ -228,45 +268,45 @@ export default function Database() {
                       {queryResult && (
                         <div className="mt-4">
                           <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            <h3 className="text-sm font-medium text-slate-300">
                               Resultado:
                             </h3>
                             {queryResult.executionTime && (
-                              <span className="text-xs text-gray-500 dark:text-gray-400">
-                                {queryResult.executionTime} • {queryResult.rowsAffected || 0} linha(s)
+                              <span className="text-xs text-slate-500">
+                                ⚡ {queryResult.executionTime} • {queryResult.rowsAffected || 0} linha(s)
                               </span>
                             )}
                           </div>
                           {queryResult.error ? (
-                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded">
+                            <div className="bg-red-900/20 border border-red-800 text-red-400 px-4 py-3 rounded-lg">
                               ❌ {queryResult.error}
                             </div>
                           ) : (
-                            <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-                              <table className="min-w-full bg-white dark:bg-gray-700">
-                                <thead className="bg-gray-50 dark:bg-gray-800">
+                            <div className="overflow-x-auto border border-slate-700 rounded-lg">
+                              <table className="min-w-full bg-slate-900">
+                                <thead className="bg-slate-800">
                                   <tr>
                                     {queryResult.columns?.map((col: string) => (
                                       <th
                                         key={col}
-                                        className="px-4 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600"
+                                        className="px-4 py-2 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider border-b border-slate-700"
                                       >
                                         {col}
                                       </th>
                                     ))}
                                   </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
+                                <tbody className="divide-y divide-slate-700">
                                   {queryResult.rows?.length > 0 ? (
                                     queryResult.rows.map((row: any, idx: number) => (
-                                      <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-600">
+                                      <tr key={idx} className="hover:bg-slate-800/50 transition-colors">
                                         {queryResult.columns?.map((col: string) => (
                                           <td
                                             key={col}
-                                            className="px-4 py-2 text-sm text-gray-900 dark:text-white"
+                                            className="px-4 py-2 text-sm text-slate-200"
                                           >
                                             {row[col]?.toString() || (
-                                              <span className="text-gray-400 italic">null</span>
+                                              <span className="text-slate-500 italic">null</span>
                                             )}
                                           </td>
                                         ))}
@@ -276,7 +316,7 @@ export default function Database() {
                                     <tr>
                                       <td
                                         colSpan={queryResult.columns?.length || 1}
-                                        className="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
+                                        className="px-4 py-8 text-center text-slate-400"
                                       >
                                         Nenhum resultado encontrado
                                       </td>
