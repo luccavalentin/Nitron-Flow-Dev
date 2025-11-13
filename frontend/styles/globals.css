@@ -102,6 +102,11 @@ a {
         var(--glow-primary);
     }
 
+    /* Sidebar specific - less transparent */
+    .glass.bg-slate-900\/95 {
+      background: rgba(15, 23, 42, 0.95) !important;
+    }
+
 /* Modern card - Tech Professional */
 .card-modern {
       background: var(--card-bg);

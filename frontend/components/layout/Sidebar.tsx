@@ -44,7 +44,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-64 glass min-h-screen border-r border-slate-800/50">
+    <div className="w-64 glass min-h-screen border-r border-slate-800/50 bg-slate-900/95">
       <div className="p-6 border-b border-slate-800/50">
         <div className="flex items-center space-x-3">
           <div className="relative">
@@ -72,12 +72,12 @@ export default function Sidebar() {
               href={item.path}
               className={`group relative flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 border-l-2 border-cyan-500'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-400 border-l-2 border-cyan-500 backdrop-blur-sm'
+                  : 'text-slate-300 hover:text-cyan-400 hover:bg-slate-800/60 backdrop-blur-sm'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-500 group-hover:text-cyan-400'} transition-colors`} />
-              <span className={`ml-3 font-medium text-sm ${isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'}`}>{item.label}</span>
+              <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-cyan-400'} transition-colors`} />
+              <span className={`ml-3 font-medium text-sm ${isActive ? 'text-cyan-400' : 'text-slate-300 group-hover:text-cyan-400'}`}>{item.label}</span>
               {isActive && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-lg shadow-cyan-500/50"></div>
               )}
@@ -86,10 +86,10 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="absolute bottom-0 w-64 p-4 border-t border-slate-800/50 glass">
+      <div className="absolute bottom-0 w-64 p-4 border-t border-slate-800/50 glass bg-slate-900/95">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center px-3 py-2.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 rounded-lg transition-all duration-200 group"
+          className="w-full flex items-center px-3 py-2.5 text-slate-300 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-all duration-200 group backdrop-blur-sm"
         >
           <LogoutIcon className="w-4 h-4 text-slate-500 group-hover:text-red-400 transition-colors" />
           <span className="ml-3 font-medium text-sm">Sair</span>
