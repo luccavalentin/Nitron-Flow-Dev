@@ -35,12 +35,13 @@ export default function Dashboard() {
       }
 
       // Carregar dados do dashboard
-      const [projectsRes, clientsRes, tasksRes, financeRes, paymentsRes] = await Promise.all([
+      const [projectsRes, clientsRes, tasksRes, financeRes, paymentsRes, activitiesRes] = await Promise.all([
         apiRequest('/projects'),
         apiRequest('/clients'),
         apiRequest('/tasks'),
         apiRequest('/fincore/summary').catch(() => ({ ok: false, data: null })),
         apiRequest('/payments/get').catch(() => ({ ok: false, data: [] })),
+        apiRequest('/activities/get').catch(() => ({ ok: false, data: [] })),
       ])
 
       const projects = projectsRes.ok ? projectsRes.data || [] : []
@@ -48,6 +49,7 @@ export default function Dashboard() {
       const tasks = tasksRes.ok ? tasksRes.data || [] : []
       const finance = financeRes.ok ? financeRes.data : null
       const payments = paymentsRes.ok ? paymentsRes.data || [] : []
+      const activities = activitiesRes.ok ? activitiesRes.data || [] : []
       
       const activeProjects = projects.filter((p: any) => p.status === 'active').length
       const activeTasks = tasks.filter((t: any) => t.status !== 'done').length
@@ -104,6 +106,7 @@ export default function Dashboard() {
         revenueData,
         taskStatusData,
         projectStatusData,
+        activities,
       })
       setLoading(false)
     }
