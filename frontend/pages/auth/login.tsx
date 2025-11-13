@@ -14,19 +14,58 @@ export default function Login() {
     setLoading(true)
     setError('')
 
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-    if (authError) {
-      setError(authError.message)
+      if (authError) {
+        setError(authError.message)
+        setLoading(false)
+        return
+      }
+
+      if (data.session) {
+        router.push('/dashboard')
+      }
+    } catch (err: any) {
+      setError(err.message || 'Erro ao fazer login')
       setLoading(false)
+    }
+  }
+
+  const handleSignUp = async () => {
+    if (!email || !password) {
+      setError('Preencha email e senha para criar conta')
       return
     }
 
-    if (data.session) {
-      router.push('/dashboard')
+    setLoading(true)
+    setError('')
+
+    try {
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      })
+
+      if (signUpError) {
+        setError(signUpError.message)
+        setLoading(false)
+        return
+      }
+
+      if (data.user) {
+        setError('Conta criada! Verifique seu email para confirmar.')
+        // Auto login após criação
+        setTimeout(() => {
+          handleLogin(new Event('submit') as any)
+        }, 1000)
+      }
+    } catch (err: any) {
+      setError(err.message || 'Erro ao criar conta')
+      setLoading(false)
     }
   }
 
@@ -100,6 +139,21 @@ export default function Login() {
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
               {loading ? 'Entrando...' : 'Entrar'}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <span className="text-sm text-gray-500 dark:text-gray-400">ou</span>
+          </div>
+
+          <div>
+            <button
+              type="button"
+              onClick={handleSignUp}
+              disabled={loading}
+              className="w-full flex justify-center py-2 px-4 border border-indigo-300 dark:border-indigo-600 rounded-md shadow-sm text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            >
+              Criar Conta
             </button>
           </div>
 
