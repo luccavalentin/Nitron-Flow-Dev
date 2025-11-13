@@ -130,15 +130,16 @@ export default function Settings() {
   }, [selectedProject]);
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 overflow-y-auto">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-              Configurações
-            </h1>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold gradient-text mb-2">Configurações</h1>
+              <p className="text-sm text-slate-400">Gerencie suas preferências e integrações</p>
+            </div>
 
             {loading ? (
               <div className="text-center py-12">Carregando...</div>
