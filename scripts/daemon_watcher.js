@@ -106,9 +106,29 @@ watcher
     console.log(`📝 Arquivo modificado: ${filePath}`);
     handleFileChange(filePath);
   })
-  .on('unlink', (filePath) => {
+  .on('unlink', async (filePath) => {
     console.log(`🗑️  Arquivo removido: ${filePath}`);
-    // TODO: Implementar remoção no workspace
+    try {
+      const relativePath = path.relative(projectPath, filePath);
+      const response = await axios.delete(
+        `${apiUrl}/workspace/patch`,
+        {
+          data: {
+            workspaceId: workspaceId,
+            path: relativePath,
+          },
+          headers: {
+            'Authorization': `Bearer ${supabaseToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (response.data.ok) {
+        console.log(`✅ Arquivo removido: ${relativePath}`);
+      }
+    } catch (error) {
+      console.error(`❌ Erro ao remover arquivo ${filePath}:`, error.message);
+    }
   })
   .on('error', (error) => {
     console.error('Erro no watcher:', error);
