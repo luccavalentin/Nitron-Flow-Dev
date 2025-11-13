@@ -10,6 +10,7 @@ Todas as versões são controladas via Git/GitHub seguindo o padrão:
 ### Versões
 
 - **V1 DATE 13/11/25 AS 14:49** - Inicialização do projeto e configuração do Git/GitHub
+- **V2 DATE 13/11/25 AS 14:50** - Adicionados scripts e documentação de setup do GitHub
 
 ## Configuração
 
