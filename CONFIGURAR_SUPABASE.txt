@@ -1,0 +1,73 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║        ⚠️  ERRO: "supabaseUrl is required"                  ║
+║                                                              ║
+║        CONFIGURE O SUPABASE AGORA                            ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+O sistema está funcionando, mas precisa das credenciais do Supabase!
+
+═══════════════════════════════════════════════════════════════
+
+📋 PASSO A PASSO:
+
+1. CRIE O ARQUIVO: frontend/.env.local
+
+2. COPIE E COLE ESTE CONTEÚDO:
+
+   NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon_aqui
+   NEXT_PUBLIC_API_URL=https://seu-projeto.supabase.co/functions/v1
+
+3. SUBSTITUA pelos seus valores reais do Supabase
+
+═══════════════════════════════════════════════════════════════
+
+🔑 COMO OBTER AS CREDENCIAIS:
+
+1. Acesse: https://supabase.com
+
+2. Faça login ou crie uma conta
+
+3. Crie um novo projeto (ou use um existente)
+
+4. Vá em: Settings > API
+
+5. Copie:
+   - "Project URL" → NEXT_PUBLIC_SUPABASE_URL
+   - "anon public" key → NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+6. A URL das Edge Functions é:
+   [SUA_PROJECT_URL]/functions/v1
+
+═══════════════════════════════════════════════════════════════
+
+✅ DEPOIS DE CONFIGURAR:
+
+1. Salve o arquivo .env.local
+
+2. REINICIE o servidor:
+   - Pare o servidor (Ctrl+C no terminal)
+   - Execute: npm run dev
+
+3. Recarregue a página no navegador
+
+═══════════════════════════════════════════════════════════════
+
+💡 EXEMPLO DE ARQUIVO .env.local:
+
+NEXT_PUBLIC_SUPABASE_URL=https://abcdefghijklmnop.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmdoaWprbG1ub3AiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY0NTE5MjAwMCwiZXhwIjoxOTYwNzY4MDAwfQ.exemplo
+NEXT_PUBLIC_API_URL=https://abcdefghijklmnop.supabase.co/functions/v1
+
+═══════════════════════════════════════════════════════════════
+
+⚠️  IMPORTANTE:
+
+- O arquivo .env.local NÃO deve ser commitado no Git
+- Ele já está no .gitignore
+- Use valores REAIS do seu projeto Supabase
+
+═══════════════════════════════════════════════════════════════
+

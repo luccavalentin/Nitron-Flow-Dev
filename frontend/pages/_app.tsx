@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import ConfigWarning from '@/components/ConfigWarning'
 import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -9,8 +10,8 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     setMounted(true)
     
-    // Verificar sessão apenas no cliente
-    if (typeof window !== 'undefined') {
+    // Verificar sessão apenas no cliente e se Supabase estiver configurado
+    if (typeof window !== 'undefined' && isSupabaseConfigured) {
       const currentPath = window.location.pathname
       const publicPaths = ['/auth/login', '/auth/callback']
       
@@ -33,6 +34,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
   if (!mounted) return null
 
-  return <Component {...pageProps} />
+  return (
+    <>
+      <ConfigWarning />
+      <Component {...pageProps} />
+    </>
+  )
 }
 
