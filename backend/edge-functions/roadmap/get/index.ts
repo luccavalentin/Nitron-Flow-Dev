@@ -42,15 +42,29 @@ serve(async (req) => {
 
     // Se não tem projectId, listar todos os roadmaps do usuário
     if (!projectId) {
-      // Buscar todos os roadmaps que pertencem a projetos do usuário ou que não têm projeto
-      const { data: roadmap, error } = await supabaseClient
+      // Buscar todos os projetos do usuário
+      const { data: userProjects } = await supabaseClient
+        .from("projects")
+        .select("id")
+        .eq("owner_id", user.id);
+
+      const projectIds = userProjects?.map(p => p.id) || [];
+
+      // Buscar roadmaps que pertencem a projetos do usuário ou que não têm projeto
+      let query = supabaseClient
         .from("roadmap_items")
         .select(`
           *,
           projects!left(owner_id, name)
-        `)
-        .or(`projects.owner_id.eq.${user.id},project_id.is.null`)
-        .order("created_at", { ascending: false });
+        `);
+
+      if (projectIds.length > 0) {
+        query = query.or(`project_id.in.(${projectIds.join(',')}),project_id.is.null`);
+      } else {
+        query = query.is("project_id", null);
+      }
+
+      const { data: roadmap, error } = await query.order("created_at", { ascending: false });
 
       if (error) {
         return new Response(
@@ -62,13 +76,7 @@ serve(async (req) => {
         );
       }
 
-      // Filtrar apenas os que pertencem ao usuário ou não têm projeto
-      const filteredRoadmap = (roadmap || []).filter((item: any) => {
-        if (!item.project_id) return true; // Roadmaps sem projeto são permitidos
-        return item.projects?.owner_id === user.id;
-      });
-
-      return new Response(JSON.stringify({ ok: true, data: filteredRoadmap }), {
+      return new Response(JSON.stringify({ ok: true, data: roadmap || [] }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
