@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/api";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
+import InputModal from "@/components/ui/InputModal";
 
 export default function Receipts() {
   const [receipts, setReceipts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showResendModal, setShowResendModal] = useState(false);
+  const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     loadReceipts();
@@ -19,12 +24,18 @@ export default function Receipts() {
     setLoading(false);
   };
 
-  const handleResend = async (receipt: any) => {
-    const email = prompt("Email para reenvio:");
-    if (!email) return;
-    
+  const handleResendClick = (receipt: any) => {
+    setSelectedReceipt(receipt);
+    setShowResendModal(true);
+  };
+
+  const handleResend = async (email: string) => {
+    setError("");
     // Em produção, chamaria API de reenvio
-    alert(`Recibo será reenviado para ${email}`);
+    setSuccess(`Recibo será reenviado para ${email}`);
+    setShowResendModal(false);
+    setSelectedReceipt(null);
+    setTimeout(() => setSuccess(""), 5000);
   };
 
   return (
@@ -104,7 +115,8 @@ export default function Receipts() {
                                       if (res.ok && res.data?.download_url) {
                                         window.open(res.data.download_url, "_blank");
                                       } else {
-                                        alert("Erro ao gerar recibo");
+                                        setError("Erro ao gerar recibo");
+                                        setTimeout(() => setError(""), 5000);
                                       }
                                     });
                                   }
@@ -114,7 +126,7 @@ export default function Receipts() {
                                 📥 Download
                               </button>
                               <button
-                                onClick={() => handleResend(receipt)}
+                                onClick={() => handleResendClick(receipt)}
                                 className="px-3 py-1 text-xs bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors"
                               >
                                 📧 Reenviar
@@ -131,6 +143,49 @@ export default function Receipts() {
           </div>
         </main>
       </div>
+
+      <InputModal
+        isOpen={showResendModal}
+        onClose={() => {
+          setShowResendModal(false);
+          setSelectedReceipt(null);
+          setError("");
+        }}
+        onSubmit={handleResend}
+        title="Reenviar Recibo"
+        label="Email para Reenvio"
+        placeholder="Digite o email"
+        type="email"
+        required
+      />
+
+      {error && (
+        <div className="fixed bottom-4 right-4 z-50 card-modern p-4 border-l-4 border-red-500 max-w-md">
+          <div className="flex items-center justify-between">
+            <p className="text-red-400">{error}</p>
+            <button
+              onClick={() => setError("")}
+              className="ml-4 text-slate-400 hover:text-slate-200"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {success && (
+        <div className="fixed bottom-4 right-4 z-50 card-modern p-4 border-l-4 border-green-500 max-w-md">
+          <div className="flex items-center justify-between">
+            <p className="text-green-400">{success}</p>
+            <button
+              onClick={() => setSuccess("")}
+              className="ml-4 text-slate-400 hover:text-slate-200"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

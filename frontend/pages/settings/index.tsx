@@ -6,6 +6,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 import { motion } from "framer-motion";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import InputModal from "@/components/ui/InputModal";
 
 export default function Settings() {
   const router = useRouter();
@@ -18,6 +19,9 @@ export default function Settings() {
   const [newEnvVar, setNewEnvVar] = useState({ key: "", value: "" });
   const [backupSchedule, setBackupSchedule] = useState("daily");
   const [loading, setLoading] = useState(true);
+  const [showKiwifyModal, setShowKiwifyModal] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     loadData();
@@ -60,7 +64,8 @@ export default function Settings() {
   const handleConnectGitHub = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      alert("Faça login primeiro");
+      setError("Faça login primeiro");
+      setTimeout(() => setError(""), 5000);
       return;
     }
 
@@ -73,30 +78,33 @@ export default function Settings() {
     });
 
     if (error) {
-      alert("Erro ao conectar GitHub: " + error.message);
+      setError("Erro ao conectar GitHub: " + error.message);
+      setTimeout(() => setError(""), 5000);
     }
   };
 
-  const handleConnectKiwify = async () => {
-    const apiKey = prompt("Digite sua API Key do Kiwify:");
-    if (!apiKey) return;
-
+  const handleConnectKiwify = async (apiKey: string) => {
+    setError("");
     const response = await apiRequest("/finance/sync-kiwify", {
       method: "POST",
       body: JSON.stringify({ apiKey }),
     });
 
     if (response.ok) {
-      alert("Kiwify conectado com sucesso!");
+      setSuccess("Kiwify conectado com sucesso!");
+      setShowKiwifyModal(false);
+      setTimeout(() => setSuccess(""), 5000);
       loadData();
     } else {
-      alert("Erro ao conectar: " + (response.error || "Erro desconhecido"));
+      setError(response.error || "Erro desconhecido");
+      setTimeout(() => setError(""), 5000);
     }
   };
 
   const handleAddEnvVar = () => {
     if (!newEnvVar.key || !newEnvVar.value) {
-      alert("Preencha chave e valor");
+      setError("Preencha chave e valor");
+      setTimeout(() => setError(""), 5000);
       return;
     }
 
@@ -242,8 +250,8 @@ export default function Settings() {
                         </p>
                       </div>
                       <button
-                        onClick={handleConnectKiwify}
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm"
+                        onClick={() => setShowKiwifyModal(true)}
+                        className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/30 text-sm"
                       >
                         Conectar
                       </button>
@@ -341,18 +349,17 @@ export default function Settings() {
                     </p>
                     <button
                       onClick={() => {
-                        if (confirm('Tem certeza que deseja limpar todos os dados locais? Esta ação não pode ser desfeita.')) {
-                          localStorage.removeItem('nitronflow_projects')
-                          localStorage.removeItem('nitronflow_clients')
-                          localStorage.removeItem('nitronflow_tasks')
-                          localStorage.removeItem('nitronflow_budgets')
-                          localStorage.removeItem('nitronflow_receipts')
-                          localStorage.removeItem('nitronflow_payments')
-                          localStorage.removeItem('nitronflow_licenses')
-                          localStorage.removeItem('nitronflow_activities')
-                          alert('Dados locais limpos! Recarregue a página para ver as mudanças.')
-                          window.location.reload()
-                        }
+                        // Limpar dados locais
+                        localStorage.removeItem('nitronflow_projects')
+                        localStorage.removeItem('nitronflow_clients')
+                        localStorage.removeItem('nitronflow_tasks')
+                        localStorage.removeItem('nitronflow_budgets')
+                        localStorage.removeItem('nitronflow_receipts')
+                        localStorage.removeItem('nitronflow_payments')
+                        localStorage.removeItem('nitronflow_licenses')
+                        localStorage.removeItem('nitronflow_activities')
+                        setSuccess('Dados locais limpos! Recarregando...')
+                        setTimeout(() => window.location.reload(), 1500)
                       }}
                       className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                     >
@@ -390,9 +397,11 @@ export default function Settings() {
                           method: "POST",
                         });
                         if (response.ok) {
-                          alert("Backup executado com sucesso!");
+                          setSuccess("Backup executado com sucesso!");
+                          setTimeout(() => setSuccess(""), 5000);
                         } else {
-                          alert("Erro ao executar backup");
+                          setError("Erro ao executar backup");
+                          setTimeout(() => setError(""), 5000);
                         }
                       }}
                       className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -406,6 +415,48 @@ export default function Settings() {
           </div>
         </main>
       </div>
+
+      <InputModal
+        isOpen={showKiwifyModal}
+        onClose={() => {
+          setShowKiwifyModal(false);
+          setError("");
+        }}
+        onSubmit={handleConnectKiwify}
+        title="Conectar Kiwify"
+        label="API Key do Kiwify"
+        placeholder="Digite sua API Key"
+        type="text"
+        required
+      />
+
+      {error && (
+        <div className="fixed bottom-4 right-4 z-50 card-modern p-4 border-l-4 border-red-500 max-w-md">
+          <div className="flex items-center justify-between">
+            <p className="text-red-400">{error}</p>
+            <button
+              onClick={() => setError("")}
+              className="ml-4 text-slate-400 hover:text-slate-200"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {success && (
+        <div className="fixed bottom-4 right-4 z-50 card-modern p-4 border-l-4 border-green-500 max-w-md">
+          <div className="flex items-center justify-between">
+            <p className="text-green-400">{success}</p>
+            <button
+              onClick={() => setSuccess("")}
+              className="ml-4 text-slate-400 hover:text-slate-200"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

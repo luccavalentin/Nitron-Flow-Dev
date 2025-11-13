@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { apiRequest } from "@/lib/api";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
+import InputModal from "@/components/ui/InputModal";
 
 export default function Workspace() {
   const router = useRouter();
@@ -11,6 +12,10 @@ export default function Workspace() {
   const [snapshots, setSnapshots] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [codeServerUrl, setCodeServerUrl] = useState("");
+  const [showSnapshotModal, setShowSnapshotModal] = useState(false);
+  const [showCommitModal, setShowCommitModal] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -40,10 +45,8 @@ export default function Workspace() {
     }
   };
 
-  const handleSnapshot = async () => {
-    const name = prompt("Nome do snapshot:");
-    if (!name) return;
-
+  const handleSnapshot = async (name: string) => {
+    setError("");
     const response = await apiRequest(`/workspace/snapshot`, {
       method: "POST",
       body: JSON.stringify({ workspaceId: id, name }),
@@ -51,25 +54,29 @@ export default function Workspace() {
 
     if (response.ok) {
       loadSnapshots();
-      alert("Snapshot criado com sucesso!");
+      setSuccess("Snapshot criado com sucesso!");
+      setShowSnapshotModal(false);
+      setTimeout(() => setSuccess(""), 5000);
     } else {
-      alert(`Erro: ${response.error}`);
+      setError(response.error || "Erro ao criar snapshot");
+      setTimeout(() => setError(""), 5000);
     }
   };
 
-  const handleCommit = async () => {
-    const message = prompt("Mensagem do commit:");
-    if (!message) return;
-
+  const handleCommit = async (message: string) => {
+    setError("");
     const response = await apiRequest(`/workspace/commit`, {
       method: "POST",
       body: JSON.stringify({ workspaceId: id, message }),
     });
 
     if (response.ok) {
-      alert("Commit realizado com sucesso!");
+      setSuccess("Commit realizado com sucesso!");
+      setShowCommitModal(false);
+      setTimeout(() => setSuccess(""), 5000);
     } else {
-      alert(`Erro: ${response.error}`);
+      setError(response.error || "Erro ao fazer commit");
+      setTimeout(() => setError(""), 5000);
     }
   };
 
@@ -99,13 +106,13 @@ export default function Workspace() {
             </h1>
             <div className="flex items-center space-x-3">
               <button
-                onClick={handleSnapshot}
+                onClick={() => setShowSnapshotModal(true)}
                 className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all text-sm shadow-lg shadow-cyan-500/30"
               >
                 📸 Criar Snapshot
               </button>
               <button
-                onClick={handleCommit}
+                onClick={() => setShowCommitModal(true)}
                 className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors text-sm"
               >
                 💾 Commit & Push

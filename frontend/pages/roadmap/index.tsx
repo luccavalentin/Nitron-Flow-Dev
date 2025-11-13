@@ -4,6 +4,8 @@ import { apiRequest } from "@/lib/api";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 import { motion } from "framer-motion";
+import InputModal from "@/components/ui/InputModal";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function Roadmap() {
   const router = useRouter();
@@ -14,6 +16,10 @@ export default function Roadmap() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<any>({});
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     loadProjects();
@@ -60,10 +66,8 @@ export default function Roadmap() {
     }
   };
 
-  const handleCreate = async () => {
-    const title = prompt("Título do milestone:");
-    if (!title) return;
-
+  const handleCreate = async (title: string) => {
+    setError("");
     const response = await apiRequest(`/roadmap/create`, {
       method: "POST",
       body: JSON.stringify({
@@ -75,19 +79,26 @@ export default function Roadmap() {
     });
     if (response.ok) {
       loadRoadmap();
+      setShowCreateModal(false);
     } else {
-      alert(`Erro: ${response.error}`);
+      setError(response.error || "Erro ao criar milestone");
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Deseja deletar este milestone?")) return;
+  const handleDeleteClick = (id: string) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteId) return;
     const response = await apiRequest(`/roadmap/delete`, {
       method: "DELETE",
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id: deleteId }),
     });
     if (response.ok) {
       loadRoadmap();
+      setDeleteId(null);
     }
   };
 
@@ -135,7 +146,7 @@ export default function Roadmap() {
                 Timeline {selectedProject && `- ${projects.find(p => p.id === selectedProject)?.name || ''}`}
               </h2>
               <button
-                onClick={handleCreate}
+                onClick={() => setShowCreateModal(true)}
                 className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/30"
               >
                 + Novo Milestone
@@ -148,7 +159,7 @@ export default function Roadmap() {
               <div className="card-modern p-12 text-center">
                 <p className="text-slate-400 mb-4">Nenhum milestone criado ainda</p>
                 <button
-                  onClick={handleCreate}
+                  onClick={() => setShowCreateModal(true)}
                   className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all"
                 >
                   Criar Primeiro Milestone
@@ -228,7 +239,7 @@ export default function Roadmap() {
                                   Editar
                                 </button>
                                 <button
-                                  onClick={() => handleDelete(item.id)}
+                                  onClick={() => handleDeleteClick(item.id)}
                                   className="px-3 py-1 text-xs bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                                 >
                                   Deletar
@@ -255,6 +266,47 @@ export default function Roadmap() {
           </div>
         </main>
       </div>
+
+      <InputModal
+        isOpen={showCreateModal}
+        onClose={() => {
+          setShowCreateModal(false);
+          setError("");
+        }}
+        onSubmit={handleCreate}
+        title="Novo Milestone"
+        label="Título do Milestone"
+        placeholder="Digite o título do milestone"
+        required
+      />
+
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Deletar Milestone"
+        message="Tem certeza que deseja deletar este milestone? Esta ação não pode ser desfeita."
+        confirmText="Deletar"
+        cancelText="Cancelar"
+        variant="danger"
+      />
+
+      {error && (
+        <div className="fixed bottom-4 right-4 z-50 card-modern p-4 border-l-4 border-red-500">
+          <div className="flex items-center justify-between">
+            <p className="text-red-400">{error}</p>
+            <button
+              onClick={() => setError("")}
+              className="ml-4 text-slate-400 hover:text-slate-200"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
