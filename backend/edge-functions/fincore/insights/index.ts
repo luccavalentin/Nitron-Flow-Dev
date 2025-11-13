@@ -68,7 +68,11 @@ serve(async (req) => {
       ) || 0;
 
     // Gerar insights básicos
-    const insights = [];
+    const insights: Array<{
+      type: string;
+      title: string;
+      message: string;
+    }> = [];
 
     if (totalBalance < 1000) {
       insights.push({
