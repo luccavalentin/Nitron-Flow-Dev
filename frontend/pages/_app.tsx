@@ -26,22 +26,18 @@ export default function App({ Component, pageProps }: AppProps) {
         return
       }
       
-      // Em modo dev, permitir acesso mesmo sem verificar sessão imediatamente
-      // A verificação só acontece se realmente não houver sessão após um tempo
-      const checkSession = () => {
-        const hasSession = hasDevSession()
-        console.log('🔍 Verificando sessão dev:', { currentPath, hasSession })
-        
-        if (!hasSession && currentPath !== '/auth/login') {
-          console.log('❌ Sem sessão, redirecionando para login')
-          window.location.href = '/auth/login'
-        } else if (hasSession) {
-          console.log('✅ Sessão encontrada, permitindo acesso')
-        }
+      // Em modo dev, verificar sessão imediatamente
+      const hasSession = hasDevSession()
+      console.log('🔍 Verificando sessão dev:', { currentPath, hasSession })
+      
+      if (!hasSession) {
+        console.log('❌ Sem sessão, redirecionando para login')
+        window.location.href = '/auth/login'
+        return
+      } else {
+        console.log('✅ Sessão encontrada, permitindo acesso')
       }
       
-      // Verificar após um delay para dar tempo da sessão ser salva
-      setTimeout(checkSession, 1000)
       return
     }
     

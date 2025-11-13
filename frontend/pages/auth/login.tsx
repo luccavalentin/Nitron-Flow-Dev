@@ -41,10 +41,20 @@ export default function Login() {
         console.log('💾 Sessão salva:', saved ? 'SIM' : 'NÃO')
         
         // Aguardar um pouco para garantir que localStorage foi atualizado
-        await new Promise(resolve => setTimeout(resolve, 300))
+        await new Promise(resolve => setTimeout(resolve, 100))
         
-        // Redirecionar usando window.location para garantir recarregamento
-        console.log('🚀 Redirecionando para /dashboard')
+        // Verificar novamente se foi salvo
+        const verifySession = localStorage.getItem('nitronflow_dev_session')
+        if (!verifySession) {
+          console.error('❌ ERRO: Sessão não foi salva!')
+          setError('Erro ao salvar sessão. Tente novamente.')
+          setLoading(false)
+          return
+        }
+        
+        console.log('✅ Sessão verificada, redirecionando...')
+        
+        // Redirecionar usando window.location para garantir recarregamento completo
         window.location.href = '/dashboard'
       } catch (err: any) {
         console.error('❌ Erro no login dev:', err)
