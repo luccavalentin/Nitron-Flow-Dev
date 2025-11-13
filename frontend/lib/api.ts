@@ -165,18 +165,60 @@ export const clientsApi = {
 }
 
 export const tasksApi = {
-  getAll: (projectId?: string) => {
+  getAll: async (projectId?: string) => {
     const url = projectId ? `/tasks?projectId=${projectId}` : '/tasks'
-    return apiRequest(url)
+    const response = await apiRequest(url)
+    if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
+      localStorageService.saveTasks(Array.isArray(response.data) ? response.data : [])
+    }
+    return response
   },
-  create: (data: any) => apiRequest('/tasks', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: any) => apiRequest(`/tasks/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => apiRequest(`/tasks?id=${id}`, { method: 'DELETE' }),
-  move: (id: string, status: string, sprintId?: string) => 
-    apiRequest('/tasks/move', { 
+  create: async (data: any) => {
+    const response = await apiRequest('/tasks', { method: 'POST', body: JSON.stringify(data) })
+    if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
+      const tasks = localStorageService.getTasks()
+      const newTask = { ...data, id: response.data.id || `task-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+      tasks.push(newTask)
+      localStorageService.saveTasks(tasks)
+      return { ...response, data: newTask }
+    }
+    return response
+  },
+  update: async (id: string, data: any) => {
+    const response = await apiRequest(`/tasks/${id}`, { method: 'PUT', body: JSON.stringify(data) })
+    if (response.ok && isDevMode() && !isSupabaseConfigured) {
+      const tasks = localStorageService.getTasks()
+      const index = tasks.findIndex((t: any) => t.id === id)
+      if (index !== -1) {
+        tasks[index] = { ...tasks[index], ...data, updated_at: new Date().toISOString() }
+        localStorageService.saveTasks(tasks)
+      }
+    }
+    return response
+  },
+  delete: async (id: string) => {
+    const response = await apiRequest(`/tasks?id=${id}`, { method: 'DELETE' })
+    if (response.ok && isDevMode() && !isSupabaseConfigured) {
+      const tasks = localStorageService.getTasks().filter((t: any) => t.id !== id)
+      localStorageService.saveTasks(tasks)
+    }
+    return response
+  },
+  move: async (id: string, status: string, sprintId?: string) => {
+    const response = await apiRequest('/tasks/move', { 
       method: 'POST', 
       body: JSON.stringify({ id, status, sprint_id: sprintId }) 
-    }),
+    })
+    if (response.ok && isDevMode() && !isSupabaseConfigured) {
+      const tasks = localStorageService.getTasks()
+      const index = tasks.findIndex((t: any) => t.id === id)
+      if (index !== -1) {
+        tasks[index] = { ...tasks[index], status, updated_at: new Date().toISOString() }
+        localStorageService.saveTasks(tasks)
+      }
+    }
+    return response
+  },
 }
 
 export const budgetsApi = {
