@@ -281,7 +281,7 @@ export default function Dashboard() {
             </div>
 
             {/* Gráficos */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
               {/* Gráfico de Receita */}
               <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg">
                 <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
