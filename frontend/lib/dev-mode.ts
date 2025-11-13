@@ -28,20 +28,36 @@ export const isDevMode = (): boolean => {
 
 export const setDevSession = (email: string) => {
   if (typeof window !== 'undefined') {
-    const session = {
-      user: {
-        id: 'dev-user-' + Date.now(),
-        email: email,
-        user_metadata: {
-          full_name: email.split('@')[0],
+    try {
+      const session = {
+        user: {
+          id: 'dev-user-' + Date.now(),
+          email: email,
+          user_metadata: {
+            full_name: email.split('@')[0],
+          },
         },
-      },
-      access_token: 'dev-token-' + Date.now(),
-      expires_at: Date.now() + 86400000, // 24 horas
+        access_token: 'dev-token-' + Date.now(),
+        expires_at: Date.now() + 86400000, // 24 horas
+      }
+      
+      const sessionStr = JSON.stringify(session)
+      localStorage.setItem(DEV_SESSION_KEY, sessionStr)
+      localStorage.setItem(DEV_MODE_KEY, 'true')
+      
+      console.log('💾 Sessão dev salva no localStorage:', { email, key: DEV_SESSION_KEY })
+      
+      // Verificar se foi salvo
+      const verify = localStorage.getItem(DEV_SESSION_KEY)
+      if (!verify) {
+        console.error('❌ ERRO: Sessão não foi salva no localStorage!')
+      } else {
+        console.log('✅ Sessão verificada no localStorage')
+      }
+    } catch (err) {
+      console.error('❌ Erro ao salvar sessão dev:', err)
+      throw err
     }
-    
-    localStorage.setItem(DEV_SESSION_KEY, JSON.stringify(session))
-    localStorage.setItem(DEV_MODE_KEY, 'true')
   }
 }
 

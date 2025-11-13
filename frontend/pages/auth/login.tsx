@@ -17,7 +17,10 @@ export default function Login() {
     
     // Modo de desenvolvimento: permite login com qualquer credencial
     // Se não está configurado E está em localhost, sempre permitir modo dev
-    const isDev = !isSupabaseConfigured && (isDevMode() || typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : ''
+    const isDev = !isSupabaseConfigured && (hostname === 'localhost' || hostname === '127.0.0.1' || isDevMode())
+    
+    console.log('🔍 Debug Login:', { isSupabaseConfigured, hostname, isDev, email })
     
     if (isDev) {
       if (!email) {
@@ -28,17 +31,26 @@ export default function Login() {
       setLoading(true)
       setError('')
       
-      // Simular delay de autenticação
-      await new Promise(resolve => setTimeout(resolve, 300))
-      
-      // Criar sessão fake
-      setDevSession(email)
-      
-      // Aguardar um pouco para garantir que localStorage foi atualizado
-      await new Promise(resolve => setTimeout(resolve, 200))
-      
-      // Redirecionar usando window.location para garantir recarregamento
-      window.location.href = '/dashboard'
+      try {
+        // Criar sessão fake ANTES do delay
+        setDevSession(email)
+        console.log('✅ Sessão dev criada')
+        
+        // Verificar se foi salva
+        const saved = localStorage.getItem('nitronflow_dev_session')
+        console.log('💾 Sessão salva:', saved ? 'SIM' : 'NÃO')
+        
+        // Aguardar um pouco para garantir que localStorage foi atualizado
+        await new Promise(resolve => setTimeout(resolve, 300))
+        
+        // Redirecionar usando window.location para garantir recarregamento
+        console.log('🚀 Redirecionando para /dashboard')
+        window.location.href = '/dashboard'
+      } catch (err: any) {
+        console.error('❌ Erro no login dev:', err)
+        setError('Erro ao fazer login: ' + err.message)
+        setLoading(false)
+      }
       return
     }
     

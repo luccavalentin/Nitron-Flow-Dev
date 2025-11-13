@@ -16,7 +16,8 @@ export default function App({ Component, pageProps }: AppProps) {
     const publicPaths = ['/auth/login', '/auth/callback']
     
     // Modo de desenvolvimento: permite acesso se tiver sessão dev
-    const isDev = !isSupabaseConfigured && (isDevMode() || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    const hostname = window.location.hostname
+    const isDev = !isSupabaseConfigured && (hostname === 'localhost' || hostname === '127.0.0.1' || isDevMode())
     
     if (isDev) {
       // Se está em uma rota pública, não precisa verificar sessão
@@ -24,12 +25,18 @@ export default function App({ Component, pageProps }: AppProps) {
         return
       }
       
-      // Verificar sessão dev com um pequeno delay para garantir que foi salva
+      // Verificar sessão dev com delay maior para garantir que foi salva
       setTimeout(() => {
-        if (!hasDevSession()) {
+        const hasSession = hasDevSession()
+        console.log('🔍 Verificando sessão dev:', { currentPath, hasSession })
+        
+        if (!hasSession) {
+          console.log('❌ Sem sessão, redirecionando para login')
           window.location.href = '/auth/login'
+        } else {
+          console.log('✅ Sessão encontrada, permitindo acesso')
         }
-      }, 200)
+      }, 500)
       return
     }
     
