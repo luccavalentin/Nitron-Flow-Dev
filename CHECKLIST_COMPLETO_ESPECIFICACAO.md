@@ -66,21 +66,21 @@
 - [x] `roadmap/update` ✅
 - [x] `roadmap/delete` ✅
 
-### 🟡 GitHub (67% - 2/3)
+### ✅ GitHub (100% - 3/3)
 - [x] `github/connect` ✅
 - [x] `github/repos` ✅
-- [ ] `github/commit-push` - **FALTANDO** (existe `workspace/commit` mas não específico GitHub)
+- [x] `github/commit-push` ✅
 
-### 🟡 Supabase Management (67% - 2/3)
+### ✅ Supabase Management (100% - 3/3)
 - [x] `supabase/connect` ✅
 - [x] `supabase/projects` ✅
-- [ ] `supabase/delete` - **FALTANDO**
+- [x] `supabase/delete` ✅
 
-### 🟡 Deploy (75% - 3/4)
+### ✅ Deploy (100% - 4/4)
 - [x] `deploy/start` ✅
 - [x] `deployments/get` ✅
 - [x] `deploy/debug` ✅
-- [ ] `deploy/logs` - **FALTANDO**
+- [x] `deploy/logs` ✅
 
 ### ✅ Finance / FINCORE (100% - 8/8)
 - [x] `finance/sync-kiwify` ✅
@@ -99,21 +99,17 @@
 - [x] `receipts/get` ✅
 - [x] `receipts/generate` ✅
 
-### 🟡 AI (67% - 2/3)
+### ✅ AI (100% - 3/3)
 - [x] `ai/chat` ✅
 - [x] `ai/stt` ✅
-- [ ] `creative_sessions` - **FALTANDO** (GET/POST)
+- [x] `creative_sessions` ✅ (GET/POST)
 
 ### ✅ Backup (100% - 1/1)
 - [x] `backup/run` ✅
 
-**Status:** ✅ **93% COMPLETO** - 44/46 Edge Functions implementadas
+**Status:** ✅ **100% COMPLETO** - 46/46 Edge Functions implementadas
 
-**Faltam apenas:**
-- `github/commit-push` (específico - existe `workspace/commit` genérico)
-- `supabase/delete`
-- `deploy/logs`
-- `creative_sessions` (GET/POST)
+**Todas as Edge Functions foram implementadas!** 🎉
 
 ---
 
@@ -397,7 +393,7 @@
 | Categoria | Completo | Total | % | Status |
 |-----------|----------|-------|---|--------|
 | **Infraestrutura** | 3/3 | 3 | **100%** | ✅ |
-| **Edge Functions** | 44/46 | 46 | **96%** | ✅ |
+| **Edge Functions** | 46/46 | 46 | **100%** | ✅ |
 | **Frontend - Telas** | 15/16 | 16 | **94%** | ✅ |
 | **Componentes** | 8/12 | 12 | **67%** | 🟡 |
 | **Integrações** | 3/6 | 6 | **50%** | 🟡 |
