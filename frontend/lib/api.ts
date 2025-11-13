@@ -130,13 +130,23 @@ export const projectsApi = {
   getById: (id: string) => apiRequest(`/projects?id=${id}`),
   create: async (data: any) => {
     const response = await apiRequest('/projects', { method: 'POST', body: JSON.stringify(data) })
-    if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
-      // Adicionar ao localStorage
-      const projects = localStorageService.getProjects()
-      const newProject = { ...data, id: response.data.id || `project-${Date.now()}`, created_at: new Date().toISOString() }
-      projects.push(newProject)
-      localStorageService.saveProjects(projects)
-      return { ...response, data: newProject }
+    // Se em modo dev e API não disponível, salvar no localStorage mesmo se a API falhar
+    if (isDevMode() && !isSupabaseConfigured) {
+      if (!response.ok || !response.data) {
+        // API falhou, criar localmente
+        const projects = localStorageService.getProjects()
+        const newProject = { ...data, id: `project-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        projects.push(newProject)
+        localStorageService.saveProjects(projects)
+        return { ok: true, data: newProject }
+      } else {
+        // API funcionou, salvar também no localStorage
+        const projects = localStorageService.getProjects()
+        const newProject = { ...data, id: response.data.id || `project-${Date.now()}`, created_at: new Date().toISOString() }
+        projects.push(newProject)
+        localStorageService.saveProjects(projects)
+        return { ...response, data: newProject }
+      }
     }
     return response
   },
@@ -153,12 +163,20 @@ export const clientsApi = {
   },
   create: async (data: any) => {
     const response = await apiRequest('/clients', { method: 'POST', body: JSON.stringify(data) })
-    if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
-      const clients = localStorageService.getClients()
-      const newClient = { ...data, id: response.data.id || `client-${Date.now()}`, created_at: new Date().toISOString() }
-      clients.push(newClient)
-      localStorageService.saveClients(clients)
-      return { ...response, data: newClient }
+    if (isDevMode() && !isSupabaseConfigured) {
+      if (!response.ok || !response.data) {
+        const clients = localStorageService.getClients()
+        const newClient = { ...data, id: `client-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        clients.push(newClient)
+        localStorageService.saveClients(clients)
+        return { ok: true, data: newClient }
+      } else {
+        const clients = localStorageService.getClients()
+        const newClient = { ...data, id: response.data.id || `client-${Date.now()}`, created_at: new Date().toISOString() }
+        clients.push(newClient)
+        localStorageService.saveClients(clients)
+        return { ...response, data: newClient }
+      }
     }
     return response
   },
@@ -175,12 +193,20 @@ export const tasksApi = {
   },
   create: async (data: any) => {
     const response = await apiRequest('/tasks', { method: 'POST', body: JSON.stringify(data) })
-    if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
-      const tasks = localStorageService.getTasks()
-      const newTask = { ...data, id: response.data.id || `task-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
-      tasks.push(newTask)
-      localStorageService.saveTasks(tasks)
-      return { ...response, data: newTask }
+    if (isDevMode() && !isSupabaseConfigured) {
+      if (!response.ok || !response.data) {
+        const tasks = localStorageService.getTasks()
+        const newTask = { ...data, id: `task-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        tasks.push(newTask)
+        localStorageService.saveTasks(tasks)
+        return { ok: true, data: newTask }
+      } else {
+        const tasks = localStorageService.getTasks()
+        const newTask = { ...data, id: response.data.id || `task-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        tasks.push(newTask)
+        localStorageService.saveTasks(tasks)
+        return { ...response, data: newTask }
+      }
     }
     return response
   },
@@ -235,12 +261,20 @@ export const budgetsApi = {
   },
   create: async (data: any) => {
     const response = await apiRequest('/budgets/create', { method: 'POST', body: JSON.stringify(data) })
-    if (response.ok && response.data && isDevMode() && !isSupabaseConfigured) {
-      const budgets = localStorageService.getBudgets()
-      const newBudget = { ...data, id: response.data.id || `budget-${Date.now()}`, created_at: new Date().toISOString() }
-      budgets.push(newBudget)
-      localStorageService.saveBudgets(budgets)
-      return { ...response, data: newBudget }
+    if (isDevMode() && !isSupabaseConfigured) {
+      if (!response.ok || !response.data) {
+        const budgets = localStorageService.getBudgets()
+        const newBudget = { ...data, id: `budget-${Date.now()}`, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        budgets.push(newBudget)
+        localStorageService.saveBudgets(budgets)
+        return { ok: true, data: newBudget }
+      } else {
+        const budgets = localStorageService.getBudgets()
+        const newBudget = { ...data, id: response.data.id || `budget-${Date.now()}`, created_at: new Date().toISOString() }
+        budgets.push(newBudget)
+        localStorageService.saveBudgets(budgets)
+        return { ...response, data: newBudget }
+      }
     }
     return response
   },
