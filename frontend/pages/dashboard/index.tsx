@@ -20,14 +20,26 @@ export default function Dashboard() {
       }
 
       // Carregar dados do dashboard
-      const projectsResponse = await apiRequest('/projects')
-      const projects = projectsResponse.data || []
+      const [projectsRes, clientsRes, tasksRes, financeRes] = await Promise.all([
+        apiRequest('/projects'),
+        apiRequest('/clients'),
+        apiRequest('/tasks'),
+        apiRequest('/fincore/summary').catch(() => ({ ok: false, data: null })),
+      ])
+
+      const projects = projectsRes.ok ? projectsRes.data || [] : []
+      const clients = clientsRes.ok ? clientsRes.data || [] : []
+      const tasks = tasksRes.ok ? tasksRes.data || [] : []
+      const finance = financeRes.ok ? financeRes.data : null
       
       const activeProjects = projects.filter((p: any) => p.status === 'active').length
+      const activeTasks = tasks.filter((t: any) => t.status !== 'done').length
 
       setSummary({
         projects: { active: activeProjects, total: projects.length },
-        finance: { total: 0, active_licenses: 0 },
+        clients: { total: clients.length },
+        tasks: { active: activeTasks, total: tasks.length },
+        finance: finance || { total: 0, active_licenses: 0 },
       })
       setLoading(false)
     }
@@ -55,40 +67,106 @@ export default function Dashboard() {
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Projetos Ativos
-                </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                  {summary?.projects?.active || 0}
-                </p>
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Projetos Ativos
+                    </h3>
+                    <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
+                      {summary?.projects?.active || 0}
+                    </p>
+                  </div>
+                  <div className="text-4xl">📁</div>
+                </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total de Projetos
-                </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                  {summary?.projects?.total || 0}
-                </p>
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Total de Projetos
+                    </h3>
+                    <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
+                      {summary?.projects?.total || 0}
+                    </p>
+                  </div>
+                  <div className="text-4xl">📊</div>
+                </div>
               </div>
 
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Clientes
+                    </h3>
+                    <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">
+                      {summary?.clients?.total || 0}
+                    </p>
+                  </div>
+                  <div className="text-4xl">👥</div>
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Tarefas Ativas
+                    </h3>
+                    <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
+                      {summary?.tasks?.active || 0}
+                    </p>
+                  </div>
+                  <div className="text-4xl">✅</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Receita Total
                 </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                  R$ {summary?.finance?.total?.toLocaleString('pt-BR') || '0,00'}
+                <p className="text-4xl font-bold text-green-600 dark:text-green-400">
+                  R$ {summary?.finance?.total?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                  Licenças Ativas: {summary?.finance?.active_licenses || 0}
                 </p>
               </div>
 
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Licenças Ativas
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Ações Rápidas
                 </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                  {summary?.finance?.active_licenses || 0}
-                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <a
+                    href="/projects"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-center transition-colors"
+                  >
+                    Ver Projetos
+                  </a>
+                  <a
+                    href="/tasks"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-center transition-colors"
+                  >
+                    Ver Tarefas
+                  </a>
+                  <a
+                    href="/clients"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center transition-colors"
+                  >
+                    Ver Clientes
+                  </a>
+                  <a
+                    href="/finance"
+                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-center transition-colors"
+                  >
+                    Ver Financeiro
+                  </a>
+                </div>
               </div>
             </div>
           </div>
