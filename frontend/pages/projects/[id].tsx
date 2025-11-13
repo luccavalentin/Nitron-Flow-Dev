@@ -247,26 +247,95 @@ export default function ProjectDetail() {
                         {project.status}
                       </p>
                     </div>
-                    {project.github_repo && (
-                      <div>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          GitHub
-                        </span>
-                        <p className="text-gray-900 dark:text-white font-medium">
-                          {project.github_repo}
-                        </p>
-                      </div>
-                    )}
-                    {project.supabase_project_ref && (
-                      <div>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          Supabase
-                        </span>
-                        <p className="text-gray-900 dark:text-white font-medium">
-                          Conectado
-                        </p>
-                      </div>
-                    )}
+                    <div className="space-y-3">
+                      {project.github_repo ? (
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">🐙</span>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                GitHub
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {project.github_repo}
+                              </p>
+                            </div>
+                          </div>
+                          <a
+                            href={`https://github.com/${project.github_repo}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1 text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+                          >
+                            Abrir
+                          </a>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg opacity-60">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">🐙</span>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                GitHub
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                Não conectado
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => router.push('/settings')}
+                            className="px-3 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors"
+                          >
+                            Conectar
+                          </button>
+                        </div>
+                      )}
+
+                      {project.supabase_project_ref ? (
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">⚡</span>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                Supabase
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {project.supabase_project_ref}
+                              </p>
+                            </div>
+                          </div>
+                          <a
+                            href={`https://supabase.com/dashboard/project/${project.supabase_project_ref}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1 text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+                          >
+                            Abrir
+                          </a>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg opacity-60">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">⚡</span>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                Supabase
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                Não conectado
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => router.push('/settings')}
+                            className="px-3 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors"
+                          >
+                            Conectar
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
