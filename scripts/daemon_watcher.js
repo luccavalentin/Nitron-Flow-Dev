@@ -12,8 +12,8 @@ const axios = require('axios');
 
 const workspaceId = process.argv[2];
 const projectPath = process.argv[3] || process.cwd();
-const apiUrl = process.env.API_URL || 'http://localhost:54321/functions/v1';
-const supabaseToken = process.env.SUPABASE_TOKEN;
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://localhost:54321/functions/v1';
+const supabaseToken = process.env.SUPABASE_TOKEN || process.env.SUPABASE_ANON_KEY;
 
 if (!workspaceId) {
   console.error('Erro: workspaceId é obrigatório');
@@ -63,8 +63,9 @@ const sendPatch = async (filePath, content) => {
     const relativePath = path.relative(projectPath, filePath);
     
     const response = await axios.post(
-      `${apiUrl}/workspace/${workspaceId}/patch`,
+      `${apiUrl}/workspace/patch`,
       {
+        workspaceId: workspaceId,
         path: relativePath,
         content: content.toString(),
         commitOnSave: false,
