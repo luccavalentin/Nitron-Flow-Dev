@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { supabase } from '@/lib/supabase'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { isDevMode, hasDevSession } from '@/lib/dev-mode'
 import { apiRequest } from '@/lib/api'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
@@ -28,11 +29,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loadData = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      if (!session) {
-        router.push('/auth/login')
-        return
+      // Verificar sessão dev primeiro se Supabase não estiver configurado
+      if (!isSupabaseConfigured && isDevMode()) {
+        if (!hasDevSession()) {
+          router.push('/auth/login')
+          return
+        }
+        // Continuar carregando dados mesmo sem Supabase
+      } else {
+        // Verificar sessão Supabase apenas se estiver configurado
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (!session) {
+          router.push('/auth/login')
+          return
+        }
       }
 
       // Carregar dados do dashboard
