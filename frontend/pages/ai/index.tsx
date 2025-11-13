@@ -227,17 +227,20 @@ export default function AI() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
         <main className="flex-1 flex flex-col p-8">
           <div className="max-w-4xl mx-auto w-full flex-1 flex flex-col">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-              Ambiente de Criação e Storytelling
-            </h1>
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold gradient-text mb-2">
+                Ambiente de Criação e Storytelling
+              </h1>
+              <p className="text-sm text-slate-400">Chat com IA, voz e criação de conteúdo</p>
+            </div>
 
-            <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow mb-4 p-6 overflow-y-auto">
+            <div className="flex-1 card-modern mb-4 p-6 overflow-y-auto">
               <div className="space-y-4">
                 {messages.length === 0 && (
                   <div className="text-center text-gray-500 dark:text-gray-400 py-12">
