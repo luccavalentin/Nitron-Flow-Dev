@@ -1,10 +1,11 @@
-# Guia de Deploy - NitronFlow Dev
+# Guia de Execução Local - NitronFlow Dev
 
 ## Pré-requisitos
 
-1. Conta no Supabase
-2. Projeto Supabase criado
-3. Variáveis de ambiente configuradas
+1. Node.js 18+ instalado
+2. Conta no Supabase
+3. Projeto Supabase criado
+4. Git configurado
 
 ## Passo 1: Configurar Supabase
 
@@ -58,18 +59,19 @@ supabase functions deploy fincore/distribute
 supabase functions deploy ai/chat
 ```
 
-## Passo 3: Deploy do Frontend
+## Passo 3: Executar o Frontend Localmente
 
-### Opção 1: Vercel (Recomendado)
+### Modo Desenvolvimento (Recomendado)
 
-1. Conecte seu repositório GitHub à Vercel
-2. Configure as variáveis de ambiente:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `NEXT_PUBLIC_API_URL`
-3. Deploy automático a cada push
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-### Opção 2: Build Manual
+O projeto estará disponível em: `http://localhost:3000`
+
+### Modo Produção Local
 
 ```bash
 cd frontend
@@ -78,31 +80,21 @@ npm run build
 npm start
 ```
 
-### Opção 3: Docker
+### Configurar Variáveis de Ambiente
 
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
+Crie o arquivo `frontend/.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon_aqui
+NEXT_PUBLIC_API_URL=https://seu-projeto.supabase.co/functions/v1
 ```
 
-## Passo 4: Configurar Domínio
+## Passo 4: Acessar o Projeto
 
-1. Configure o domínio no seu provedor de hospedagem
-2. Atualize as URLs nas variáveis de ambiente
-3. Configure CORS no Supabase se necessário
-
-## Passo 5: Go Live
-
-1. Acesse o projeto no dashboard
-2. Clique em "Go Live 🚀"
-3. Aguarde o deploy
-4. Acesse a URL gerada
+1. Abra `http://localhost:3000` no navegador
+2. Faça login ou crie uma conta
+3. Comece a usar o NitronFlow Dev!
 
 ## Troubleshooting
 

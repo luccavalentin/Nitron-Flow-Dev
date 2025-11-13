@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Script de deploy para NitronFlow Dev
-# Uso: ./deploy.sh [environment]
+# Script para build local do NitronFlow Dev
+# Uso: ./deploy.sh
 
-ENVIRONMENT=${1:-production}
-PROJECT_NAME="nitronflow-dev"
-
-echo "🚀 Iniciando deploy para $ENVIRONMENT..."
+echo "📦 Fazendo build do projeto localmente..."
 
 # Verificar se está no diretório correto
 if [ ! -d "frontend" ]; then
@@ -17,7 +14,14 @@ fi
 # Build do frontend
 echo "📦 Fazendo build do frontend..."
 cd frontend
-npm install
+
+# Verificar se node_modules existe
+if [ ! -d "node_modules" ]; then
+  echo "📥 Instalando dependências..."
+  npm install
+fi
+
+echo "🔨 Compilando projeto..."
 npm run build
 
 if [ $? -ne 0 ]; then
@@ -26,27 +30,10 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "✅ Build concluído!"
-
-# Deploy baseado no ambiente
-if [ "$ENVIRONMENT" = "production" ]; then
-  echo "🌐 Deploy em produção..."
-  
-  # Verificar se Vercel CLI está instalado
-  if command -v vercel &> /dev/null; then
-    vercel --prod
-  else
-    echo "⚠️  Vercel CLI não encontrado. Instale com: npm i -g vercel"
-    echo "📝 Ou faça deploy manualmente na Vercel"
-  fi
-else
-  echo "🧪 Deploy em staging..."
-  
-  if command -v vercel &> /dev/null; then
-    vercel
-  else
-    echo "⚠️  Vercel CLI não encontrado"
-  fi
-fi
-
-echo "✅ Deploy concluído!"
+echo ""
+echo "🚀 Para executar o projeto em produção local:"
+echo "   cd frontend && npm start"
+echo ""
+echo "💡 Para desenvolvimento com hot reload:"
+echo "   cd frontend && npm run dev"
 

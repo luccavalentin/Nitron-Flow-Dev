@@ -31,6 +31,7 @@ Todas as versões são controladas via Git/GitHub seguindo o padrão:
 ### Opção 1: Vercel (Recomendado - Mais Rápido)
 
 1. **Conecte o repositório à Vercel:**
+
    - Acesse [vercel.com](https://vercel.com)
    - Importe este repositório GitHub
    - Configure as variáveis de ambiente:
@@ -39,6 +40,7 @@ Todas as versões são controladas via Git/GitHub seguindo o padrão:
      - `NEXT_PUBLIC_API_URL` (URL das Edge Functions)
 
 2. **Deploy automático:**
+
    - A Vercel fará deploy automaticamente
    - Você receberá uma URL: `https://seu-projeto.vercel.app`
 
@@ -76,11 +78,13 @@ chmod +x scripts/deploy.sh
 ## 📋 Pré-requisitos para Deploy
 
 1. **Supabase configurado:**
+
    - Execute `sql/nitronflow_schema.sql` no SQL Editor
    - Crie os buckets no Storage
    - Configure as Environment Variables
 
 2. **Edge Functions deployadas:**
+
    - Veja `docs/DEPLOY.md` para instruções completas
 
 3. **Variáveis de ambiente:**
@@ -127,12 +131,15 @@ chmod +x scripts/deploy.sh
 - `docs/PROXIMOS_PASSOS.md` - Roadmap de implementação
 - `guias, prompts e comandos/NITRONFLOW_DEV_ESPECIFICACAO_COMPLETA.md` - Especificação completa
 
-## 🎯 Como Usar o Go Live
+## 🎯 Como Visualizar o Projeto Localmente
 
-1. Acesse um projeto no dashboard
-2. Clique em "Go Live 🚀" na página de detalhes
-3. Aguarde o deploy (alguns segundos)
-4. Acesse a URL gerada para visualizar seu projeto em produção!
+1. Configure o Supabase (veja pré-requisitos acima)
+2. Configure as variáveis de ambiente no `.env.local`
+3. Execute `npm run dev` na pasta `frontend`
+4. Acesse `http://localhost:3000` no navegador
+5. Faça login e comece a usar!
+
+**Nota:** O botão "Go Live" na interface é para deploy futuro. Para desenvolvimento, use sempre `npm run dev` localmente.
 
 ## 📝 Notas
 
