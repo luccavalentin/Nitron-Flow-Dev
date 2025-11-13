@@ -140,16 +140,21 @@ export default function Dashboard() {
     )
   }
 
-  return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header />
-        <main className="flex-1 p-8">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-              Dashboard
-            </h1>
+      return (
+        <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+          <Sidebar />
+          <div className="flex-1 flex flex-col">
+            <Header />
+            <main className="flex-1 p-8 overflow-y-auto">
+              <div className="max-w-7xl mx-auto">
+                <div className="mb-8">
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 dark:from-slate-100 dark:via-indigo-200 dark:to-slate-100 bg-clip-text text-transparent mb-2">
+                    Dashboard
+                  </h1>
+                  <p className="text-slate-600 dark:text-slate-400 font-medium">
+                    Visão geral do seu ambiente de desenvolvimento
+                  </p>
+                </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
@@ -258,8 +263,8 @@ export default function Dashboard() {
             {/* Gráficos */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Gráfico de Receita */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
                   Receita (Últimos 6 Meses)
                 </h3>
                 {summary?.revenueData && summary.revenueData.length > 0 ? (
@@ -303,11 +308,11 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Gráfico de Tarefas por Status */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Tarefas por Status
-                </h3>
+                  {/* Gráfico de Tarefas por Status */}
+                  <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                      Tarefas por Status
+                    </h3>
                 {summary?.taskStatusData && summary.taskStatusData.length > 0 ? (
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
@@ -338,12 +343,12 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Gráfico de Projetos por Status */}
-            {summary?.projectStatusData && summary.projectStatusData.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Projetos por Status
-                </h3>
+                {/* Gráfico de Projetos por Status */}
+                {summary?.projectStatusData && summary.projectStatusData.length > 0 && (
+                  <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 mb-8">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                      Projetos por Status
+                    </h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={summary.projectStatusData}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-gray-300 dark:stroke-gray-700" />
@@ -369,11 +374,11 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Feed de Atividades */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Atividades Recentes
-              </h3>
+                {/* Feed de Atividades */}
+                <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                    Atividades Recentes
+                  </h3>
               <ActivityFeed limit={10} />
             </div>
           </div>
