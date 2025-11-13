@@ -58,8 +58,9 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-900 border-b border-slate-800 px-6 py-3">
-      <div className="flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-slate-900 border-b border-slate-800 px-6 py-3 relative">
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
+      <div className="flex items-center justify-between relative z-10">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className="relative">

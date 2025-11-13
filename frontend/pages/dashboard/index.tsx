@@ -141,12 +141,12 @@ export default function Dashboard() {
   }
 
       return (
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen relative">
           <Sidebar />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col relative z-0">
             <Header />
-            <main className="flex-1 p-8 overflow-y-auto">
-              <div className="max-w-7xl mx-auto">
+            <main className="flex-1 p-8 overflow-y-auto relative z-0">
+              <div className="max-w-7xl mx-auto relative z-10">
                 <div className="mb-8">
                   <h1 className="text-3xl font-bold gradient-text mb-2">
                     Dashboard

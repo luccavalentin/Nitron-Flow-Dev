@@ -44,8 +44,9 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-64 bg-slate-900 min-h-screen border-r border-slate-800">
-      <div className="p-6 border-b border-slate-800">
+    <div className="w-64 bg-slate-900 min-h-screen border-r border-slate-800 relative z-10">
+      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
+      <div className="p-6 border-b border-slate-800 relative z-10">
         <div className="flex items-center space-x-3">
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
@@ -62,7 +63,7 @@ export default function Sidebar() {
         </div>
       </div>
       
-      <nav className="px-3 py-4 space-y-1 overflow-y-auto max-h-[calc(100vh-180px)]">
+      <nav className="px-3 py-4 space-y-1 overflow-y-auto max-h-[calc(100vh-180px)] relative z-10">
         {menuItems.map((item) => {
           const isActive = router.pathname === item.path || router.pathname.startsWith(item.path + '/')
           const Icon = item.icon
@@ -86,7 +87,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="absolute bottom-0 w-64 p-4 border-t border-slate-800 bg-slate-900">
+      <div className="absolute bottom-0 w-64 p-4 border-t border-slate-800 bg-slate-900 relative z-10">
         <button
           onClick={handleLogout}
           className="w-full flex items-center px-3 py-2.5 text-slate-300 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-all duration-200 group"
