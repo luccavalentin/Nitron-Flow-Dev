@@ -50,12 +50,12 @@ export default function FINCORE() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen">
         <Sidebar />
         <div className="flex-1 flex flex-col">
           <Header />
           <main className="flex-1 p-8">
-            <div className="text-center py-12">Carregando...</div>
+            <div className="text-center py-12 text-slate-400">Carregando...</div>
           </main>
         </div>
       </div>
@@ -66,26 +66,28 @@ export default function FINCORE() {
   const kpis = summary?.kpis || {};
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                FINCORE AI
-              </h1>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold gradient-text mb-2">FINCORE AI</h1>
+              <p className="text-sm text-slate-400">Inteligência financeira e alocação automática de fundos</p>
+            </div>
+            <div className="flex items-center justify-between mb-6">
+              <div></div>
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShowSimulate(true)}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/30"
                 >
                   Simular Cenário
                 </button>
                 <button
                   onClick={loadInsights}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors"
                 >
                   Atualizar Insights
                 </button>
@@ -93,22 +95,22 @@ export default function FINCORE() {
             </div>
 
             {insights && insights.insights && insights.insights.length > 0 && (
-              <div className="mb-8 space-y-3">
+              <div className="mb-6 space-y-3">
                 {insights.insights.map((insight: any, idx: number) => (
                   <div
                     key={idx}
-                    className={`p-4 rounded-lg ${
+                    className={`card-modern p-4 ${
                       insight.type === "warning"
-                        ? "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800"
+                        ? "border-yellow-500/50"
                         : insight.type === "success"
-                        ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
-                        : "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"
+                        ? "border-green-500/50"
+                        : "border-cyan-500/50"
                     }`}
                   >
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                    <h3 className="font-semibold text-slate-200 mb-1 text-sm">
                       {insight.title}
                     </h3>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                    <p className="text-sm text-slate-400">
                       {insight.message}
                     </p>
                   </div>
@@ -116,12 +118,12 @@ export default function FINCORE() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="card-modern p-5">
+                <h3 className="text-sm font-medium text-slate-500 mb-1">
                   Saldo Total
                 </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+                <p className="text-3xl font-bold text-cyan-400">
                   R$ {summary?.total_balance?.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -129,11 +131,11 @@ export default function FINCORE() {
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              <div className="card-modern p-5">
+                <h3 className="text-sm font-medium text-slate-500 mb-1">
                   Receita Total
                 </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+                <p className="text-3xl font-bold text-green-400">
                   R$ {kpis.total_revenue?.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -141,81 +143,93 @@ export default function FINCORE() {
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              <div className="card-modern p-5">
+                <h3 className="text-sm font-medium text-slate-500 mb-1">
                   Licenças Ativas
                 </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+                <p className="text-3xl font-bold text-blue-400">
                   {kpis.active_licenses || 0}
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              <div className="card-modern p-5">
+                <h3 className="text-sm font-medium text-slate-500 mb-1">
                   ROI
                 </h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+                <p className="text-3xl font-bold text-purple-400">
                   {kpis.roi ? `${kpis.roi}%` : "N/A"}
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+              <div className="card-modern p-5">
+                <h2 className="text-sm font-medium text-slate-300 mb-4">
                   Fundos
                 </h2>
                 <div className="space-y-3">
                   {funds.length > 0 ? (
-                    funds.map((fund: any) => (
-                      <div
-                        key={fund.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-white">
-                            {fund.name}
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {fund.code}
-                          </p>
+                    funds.map((fund: any) => {
+                      const totalBalance = summary?.total_balance || 1;
+                      const percentage = (parseFloat(fund.balance || "0") / totalBalance) * 100;
+                      return (
+                        <div
+                          key={fund.id}
+                          className="p-3 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700 hover:border-cyan-500/50 transition-all"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <p className="font-medium text-slate-200 text-sm">
+                                {fund.name}
+                              </p>
+                              <p className="text-xs text-slate-500">
+                                {fund.code}
+                              </p>
+                            </div>
+                            <p className="text-lg font-semibold text-cyan-400">
+                              R$ {parseFloat(fund.balance || "0").toLocaleString("pt-BR", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}
+                            </p>
+                          </div>
+                          <div className="w-full bg-slate-700 rounded-full h-2">
+                            <div
+                              className="bg-gradient-to-r from-cyan-500 to-blue-600 h-2 rounded-full transition-all"
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
                         </div>
-                        <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                          R$ {parseFloat(fund.balance || "0").toLocaleString("pt-BR", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </p>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">
+                    <p className="text-slate-400 text-sm">
                       Nenhum fundo criado ainda
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="card-modern p-5">
+                <h2 className="text-sm font-medium text-slate-300 mb-4">
                   KPIs
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">LTV</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <p className="text-xs text-slate-500 mb-1">LTV</p>
+                    <p className="text-lg font-semibold text-cyan-400">
                       {kpis.ltv ? `R$ ${kpis.ltv.toLocaleString("pt-BR")}` : "N/A"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">CAC</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <p className="text-xs text-slate-500 mb-1">CAC</p>
+                    <p className="text-lg font-semibold text-blue-400">
                       {kpis.cac ? `R$ ${kpis.cac.toLocaleString("pt-BR")}` : "N/A"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Runway</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <p className="text-xs text-slate-500 mb-1">Runway</p>
+                    <p className="text-lg font-semibold text-green-400">
                       {kpis.runway ? `${kpis.runway} meses` : "N/A"}
                     </p>
                   </div>
@@ -224,29 +238,29 @@ export default function FINCORE() {
             </div>
 
             {summary?.recent_transactions && summary.recent_transactions.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="card-modern p-5 mb-6">
+                <h2 className="text-sm font-medium text-slate-300 mb-4">
                   Transações Recentes
                 </h2>
                 <div className="space-y-2">
                   {summary.recent_transactions.map((tx: any) => (
                     <div
                       key={tx.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700 hover:border-cyan-500/50 transition-all"
                     >
                       <div>
-                        <p className="font-medium text-gray-900 dark:text-white">
+                        <p className="font-medium text-slate-200 text-sm">
                           {tx.reference || "Transação"}
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-slate-500 mt-1">
                           {new Date(tx.created_at).toLocaleDateString("pt-BR")}
                         </p>
                       </div>
                       <p
                         className={`text-lg font-semibold ${
                           tx.type === "credit"
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-red-600 dark:text-red-400"
+                            ? "text-green-400"
+                            : "text-red-400"
                         }`}
                       >
                         {tx.type === "credit" ? "+" : "-"}R${" "}
@@ -262,8 +276,8 @@ export default function FINCORE() {
             )}
 
             {simulation && (
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mt-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="card-modern p-5 mt-6">
+                <h2 className="text-sm font-medium text-slate-300 mb-4">
                   Simulação: {simulation.scenario}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
