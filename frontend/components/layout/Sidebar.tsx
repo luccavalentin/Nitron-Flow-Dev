@@ -44,22 +44,22 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-72 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 min-h-screen border-r border-slate-200/60 dark:border-slate-700/60 backdrop-blur-xl">
-      <div className="p-6 border-b border-slate-200/60 dark:border-slate-700/60">
+    <div className="w-64 bg-white dark:bg-slate-900 min-h-screen border-r border-slate-200 dark:border-slate-800">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <span className="text-white font-bold text-lg">N</span>
+          <div className="w-9 h-9 rounded-lg bg-slate-900 dark:bg-slate-100 flex items-center justify-center">
+            <span className="text-white dark:text-slate-900 font-bold text-sm">NF</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-base font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
               NitronFlow
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Dev Platform</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">Development</p>
           </div>
         </div>
       </div>
       
-      <nav className="px-3 py-4 space-y-1 overflow-y-auto max-h-[calc(100vh-180px)]">
+      <nav className="px-3 py-4 space-y-0.5 overflow-y-auto max-h-[calc(100vh-180px)]">
         {menuItems.map((item) => {
           const isActive = router.pathname === item.path || router.pathname.startsWith(item.path + '/')
           const Icon = item.icon
@@ -67,28 +67,28 @@ export default function Sidebar() {
             <Link
               key={item.path}
               href={item.path}
-              className={`group flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 ${
+              className={`group flex items-center px-3 py-2.5 rounded-lg transition-colors duration-150 ${
                 isActive
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/30'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-indigo-600 dark:hover:text-indigo-400'
+                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'} transition-colors`} />
-              <span className={`ml-3 font-medium text-sm ${isActive ? 'text-white' : ''}`}>{item.label}</span>
+              <Icon className={`w-4 h-4 ${isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'} transition-colors`} />
+              <span className={`ml-3 font-medium text-sm ${isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400'}`}>{item.label}</span>
               {isActive && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/80"></div>
+                <div className="ml-auto w-1 h-6 rounded-full bg-slate-900 dark:bg-slate-100"></div>
               )}
             </Link>
           )
         })}
       </nav>
 
-      <div className="absolute bottom-0 w-72 p-4 border-t border-slate-200/60 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-xl">
+      <div className="absolute bottom-0 w-64 p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center px-3 py-2.5 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all duration-200 group"
+          className="w-full flex items-center px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors duration-150 group"
         >
-          <LogoutIcon className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-red-500 transition-colors" />
+          <LogoutIcon className="w-4 h-4 text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors" />
           <span className="ml-3 font-medium text-sm">Sair</span>
         </button>
       </div>

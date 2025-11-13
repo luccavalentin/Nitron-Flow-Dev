@@ -148,101 +148,89 @@ export default function Dashboard() {
             <main className="flex-1 p-8 overflow-y-auto">
               <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
-                  <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 dark:from-slate-100 dark:via-indigo-200 dark:to-slate-100 bg-clip-text text-transparent mb-2">
+                  <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
                     Dashboard
                   </h1>
-                  <p className="text-slate-600 dark:text-slate-400 font-medium">
-                    Visão geral do seu ambiente de desenvolvimento
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Visão geral do ambiente de desenvolvimento
                   </p>
                 </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="group relative overflow-hidden bg-gradient-to-br from-indigo-500 to-indigo-600 dark:from-indigo-600 dark:to-indigo-700 p-6 rounded-2xl shadow-xl shadow-indigo-500/20 hover:shadow-2xl hover:shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-indigo-100 uppercase tracking-wide">
-                      Projetos Ativos
-                    </h3>
-                    <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Projetos Ativos
+                  </h3>
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
                   </div>
-                  <p className="text-4xl font-bold text-white mb-1">
-                    {summary?.projects?.active || 0}
-                  </p>
-                  <p className="text-xs text-indigo-200 font-medium">
-                    de {summary?.projects?.total || 0} projetos
-                  </p>
                 </div>
+                <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                  {summary?.projects?.active || 0}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  de {summary?.projects?.total || 0} projetos
+                </p>
               </div>
 
-              <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 dark:from-slate-900 dark:to-slate-950 p-6 rounded-2xl shadow-xl shadow-slate-900/20 hover:shadow-2xl hover:shadow-slate-900/30 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wide">
-                      Total Projetos
-                    </h3>
-                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                      <svg className="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                      </svg>
-                    </div>
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Total Projetos
+                  </h3>
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
                   </div>
-                  <p className="text-4xl font-bold text-white mb-1">
-                    {summary?.projects?.total || 0}
-                  </p>
-                  <p className="text-xs text-slate-400 font-medium">
-                    Todos os projetos
-                  </p>
                 </div>
+                <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                  {summary?.projects?.total || 0}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Todos os projetos
+                </p>
               </div>
 
-              <div className="group relative overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 p-6 rounded-2xl shadow-xl shadow-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-emerald-100 uppercase tracking-wide">
-                      Tarefas Ativas
-                    </h3>
-                    <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                      </svg>
-                    </div>
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Tarefas Ativas
+                  </h3>
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
                   </div>
-                  <p className="text-4xl font-bold text-white mb-1">
-                    {summary?.tasks?.active || 0}
-                  </p>
-                  <p className="text-xs text-emerald-200 font-medium">
-                    de {summary?.tasks?.total || 0} tarefas
-                  </p>
                 </div>
+                <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                  {summary?.tasks?.active || 0}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  de {summary?.tasks?.total || 0} tarefas
+                </p>
               </div>
 
-              <div className="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600 p-6 rounded-2xl shadow-xl shadow-purple-500/20 hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-purple-100 uppercase tracking-wide">
-                      Clientes
-                    </h3>
-                    <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                    </div>
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Clientes
+                  </h3>
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
                   </div>
-                  <p className="text-4xl font-bold text-white mb-1">
-                    {summary?.clients?.total || 0}
-                  </p>
-                  <p className="text-xs text-purple-200 font-medium">
-                    Clientes cadastrados
-                  </p>
                 </div>
+                <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                  {summary?.clients?.total || 0}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Clientes cadastrados
+                </p>
               </div>
             </div>
 
@@ -295,8 +283,8 @@ export default function Dashboard() {
             {/* Gráficos */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Gráfico de Receita */}
-              <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg">
+                <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
                   Receita (Últimos 6 Meses)
                 </h3>
                 {summary?.revenueData && summary.revenueData.length > 0 ? (
@@ -341,8 +329,8 @@ export default function Dashboard() {
               </div>
 
                   {/* Gráfico de Tarefas por Status */}
-                  <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                  <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg">
+                    <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
                       Tarefas por Status
                     </h3>
                 {summary?.taskStatusData && summary.taskStatusData.length > 0 ? (
@@ -377,8 +365,8 @@ export default function Dashboard() {
 
                 {/* Gráfico de Projetos por Status */}
                 {summary?.projectStatusData && summary.projectStatusData.length > 0 && (
-                  <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 mb-8">
-                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                  <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg mb-8">
+                    <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
                       Projetos por Status
                     </h3>
                 <ResponsiveContainer width="100%" height={300}>
@@ -407,8 +395,8 @@ export default function Dashboard() {
             )}
 
                 {/* Feed de Atividades */}
-                <div className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg">
+                  <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
                     Atividades Recentes
                   </h3>
               <ActivityFeed limit={10} />
