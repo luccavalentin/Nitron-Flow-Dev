@@ -90,21 +90,54 @@ export default function AI() {
             </div>
 
             <form onSubmit={handleSend} className="flex space-x-3">
-              <input
-                type="text"
+              <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Digite sua mensagem..."
-                className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Digite sua mensagem... (Shift+Enter para nova linha, Enter para enviar)"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend(e as any);
+                  }
+                }}
+                rows={3}
+                className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
               />
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors self-end"
               >
-                Enviar
+                {loading ? "Enviando..." : "Enviar"}
               </button>
             </form>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button
+                onClick={() => setInput("Crie um projeto para...")}
+                className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                💡 Criar Projeto
+              </button>
+              <button
+                onClick={() => setInput("Gere um roadmap para...")}
+                className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                🗺️ Gerar Roadmap
+              </button>
+              <button
+                onClick={() => setInput("Crie tarefas para...")}
+                className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                ✅ Criar Tarefas
+              </button>
+              <button
+                onClick={() => setInput("Analise minha situação financeira...")}
+                className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                💰 Análise Financeira
+              </button>
+            </div>
           </div>
         </main>
       </div>

@@ -86,38 +86,45 @@ npm run dev
 ### ✅ Implementado (30+ Edge Functions, 15+ Páginas)
 
 #### 🔐 Autenticação (100%)
+
 - Login email/senha
 - Login GitHub OAuth
 - Proteção de rotas
 - Gerenciamento de sessão
 
 #### 📁 Projetos (100%)
+
 - CRUD completo
 - Roadmap
 - Deployments
 - Integrações
 
 #### 👥 Clientes (100%)
+
 - CRUD completo
 - Gerenciamento de contatos
 
 #### ✅ Tarefas (100%)
+
 - CRUD completo
 - Kanban board com drag & drop
 - Mover entre status
 
 #### 💰 Financeiro (90%)
+
 - Sincronizar Kiwify
 - Listar produtos/versões
 - Orçamentos e recibos
 - FINCORE AI (summary, distribute)
 
 #### 🗄️ Banco de Dados (80%)
+
 - Conectar Supabase
 - Query editor
 - Gerenciar conexões
 
 #### ⚙️ Configurações (100%)
+
 - Perfil do usuário
 - Tema claro/escuro
 - Integrações
