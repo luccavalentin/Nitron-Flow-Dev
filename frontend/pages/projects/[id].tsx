@@ -11,13 +11,16 @@ export default function ProjectDetail() {
   const [project, setProject] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [roadmap, setRoadmap] = useState<any[]>([]);
+  const [deployments, setDeployments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deploying, setDeploying] = useState(false);
 
   useEffect(() => {
     if (id) {
       loadProject();
       loadTasks();
       loadRoadmap();
+      loadDeployments();
     }
   }, [id]);
 
@@ -41,17 +44,34 @@ export default function ProjectDetail() {
     setRoadmap([]);
   };
 
-  const handleInitRoadmap = async () => {
-    const response = await apiRequest(`/projects/${id}/init-roadmap`, {
+  const loadDeployments = async () => {
+    // TODO: Implementar endpoint de deployments
+    setDeployments([]);
+  };
+
+  const handleDeploy = async (environment: string) => {
+    if (!confirm(`Confirmar deploy para ${environment}?`)) return;
+
+    setDeploying(true);
+    const response = await apiRequest("/deploy", {
       method: "POST",
+      body: JSON.stringify({
+        projectId: id,
+        environment,
+      }),
     });
+
     if (response.ok) {
-      loadRoadmap();
+      alert(`Deploy iniciado! URL: ${response.data.preview_url}`);
+      loadDeployments();
+    } else {
+      alert(`Erro: ${response.error}`);
     }
+    setDeploying(false);
   };
 
   useEffect(() => {
-    if (project && tasks.length > 0) {
+    if (project && tasks.length >= 0) {
       setLoading(false);
     }
   }, [project, tasks]);
@@ -171,7 +191,15 @@ export default function ProjectDetail() {
                     </h2>
                     {roadmap.length === 0 && (
                       <button
-                        onClick={handleInitRoadmap}
+                        onClick={async () => {
+                          const response = await apiRequest(
+                            `/projects/${id}/init-roadmap`,
+                            { method: "POST" }
+                          );
+                          if (response.ok) {
+                            loadRoadmap();
+                          }
+                        }}
                         className="px-3 py-1 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700"
                       >
                         Inicializar Roadmap
@@ -241,6 +269,68 @@ export default function ProjectDetail() {
 
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Deploy
+                  </h2>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => handleDeploy("staging")}
+                      disabled={deploying}
+                      className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors text-center"
+                    >
+                      {deploying ? "Deployando..." : "Deploy Staging"}
+                    </button>
+                    <button
+                      onClick={() => handleDeploy("production")}
+                      disabled={deploying}
+                      className="block w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors text-center"
+                    >
+                      {deploying ? "Deployando..." : "Go Live 🚀"}
+                    </button>
+                  </div>
+                  {deployments.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Últimos Deploys
+                      </h3>
+                      <div className="space-y-2">
+                        {deployments.slice(0, 3).map((deploy) => (
+                          <div
+                            key={deploy.id}
+                            className="text-sm text-gray-600 dark:text-gray-400"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>{deploy.environment}</span>
+                              <span
+                                className={`px-2 py-1 rounded text-xs ${
+                                  deploy.status === "success"
+                                    ? "bg-green-100 text-green-800"
+                                    : deploy.status === "pending"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-red-100 text-red-800"
+                                }`}
+                              >
+                                {deploy.status}
+                              </span>
+                            </div>
+                            {deploy.logs?.url && (
+                              <a
+                                href={deploy.logs.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-indigo-600 dark:text-indigo-400 hover:underline text-xs"
+                              >
+                                Ver site →
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                     Ações Rápidas
                   </h2>
                   <div className="space-y-2">
@@ -250,6 +340,14 @@ export default function ProjectDetail() {
                     >
                       Ver Tarefas
                     </Link>
+                    {project.workspaces && project.workspaces.length > 0 && (
+                      <Link
+                        href={`/workspace/${project.workspaces[0].id}`}
+                        className="block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center"
+                      >
+                        Abrir Workspace
+                      </Link>
+                    )}
                     <button className="block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                       Conectar GitHub
                     </button>
@@ -266,4 +364,3 @@ export default function ProjectDetail() {
     </div>
   );
 }
-
