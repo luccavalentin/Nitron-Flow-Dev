@@ -127,7 +127,17 @@ export const receiptsApi = {
 }
 
 export const financeApi = {
-  getProducts: () => apiRequest('/finance/products'),
-  syncKiwify: () => apiRequest('/finance/sync-kiwify', { method: 'POST' }),
-}
+      getProducts: () => apiRequest('/finance/products'),
+      syncKiwify: () => apiRequest('/finance/sync-kiwify', { method: 'POST' }),
+    }
+
+    export const activitiesApi = {
+      getAll: (projectId?: string, limit?: number) => {
+        const params = new URLSearchParams()
+        if (projectId) params.append('projectId', projectId)
+        if (limit) params.append('limit', limit.toString())
+        const url = `/activities/get${params.toString() ? `?${params.toString()}` : ''}`
+        return apiRequest(url)
+      },
+    }
 

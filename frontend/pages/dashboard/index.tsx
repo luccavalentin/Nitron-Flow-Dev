@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { apiRequest } from '@/lib/api'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
+import ActivityFeed from '@/components/ActivityFeed'
 import {
   LineChart,
   Line,
@@ -350,6 +351,14 @@ export default function Dashboard() {
                 </ResponsiveContainer>
               </div>
             )}
+
+            {/* Feed de Atividades */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Atividades Recentes
+              </h3>
+              <ActivityFeed limit={10} />
+            </div>
           </div>
         </main>
       </div>
