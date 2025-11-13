@@ -16,7 +16,9 @@ export default function App({ Component, pageProps }: AppProps) {
     const publicPaths = ['/auth/login', '/auth/callback']
     
     // Modo de desenvolvimento: permite acesso se tiver sessão dev
-    if (!isSupabaseConfigured && isDevMode()) {
+    const isDev = !isSupabaseConfigured && (isDevMode() || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    
+    if (isDev) {
       // Se está em uma rota pública, não precisa verificar sessão
       if (publicPaths.includes(currentPath)) {
         return
@@ -27,7 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
         if (!hasDevSession()) {
           window.location.href = '/auth/login'
         }
-      }, 100)
+      }, 200)
       return
     }
     

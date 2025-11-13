@@ -16,7 +16,10 @@ export default function Login() {
     e.preventDefault()
     
     // Modo de desenvolvimento: permite login com qualquer credencial
-    if (!isSupabaseConfigured && isDevMode()) {
+    // Se não está configurado E está em localhost, sempre permitir modo dev
+    const isDev = !isSupabaseConfigured && (isDevMode() || typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    
+    if (isDev) {
       if (!email) {
         setError('Digite um email (qualquer email funciona em modo dev)')
         return
@@ -32,7 +35,7 @@ export default function Login() {
       setDevSession(email)
       
       // Aguardar um pouco para garantir que localStorage foi atualizado
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise(resolve => setTimeout(resolve, 200))
       
       // Redirecionar usando window.location para garantir recarregamento
       window.location.href = '/dashboard'
