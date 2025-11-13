@@ -9,15 +9,20 @@ const DEV_SESSION_KEY = 'nitronflow_dev_session'
 export const isDevMode = (): boolean => {
   // Verifica se está em localhost
   if (typeof window !== 'undefined') {
-    const isLocalhost = window.location.hostname === 'localhost' || 
-                       window.location.hostname === '127.0.0.1' ||
-                       window.location.hostname === ''
+    const hostname = window.location.hostname.toLowerCase()
+    const isLocalhost = hostname === 'localhost' || 
+                       hostname === '127.0.0.1' ||
+                       hostname === '' ||
+                       hostname.startsWith('192.168.') ||
+                       hostname.startsWith('10.') ||
+                       hostname.startsWith('172.')
     
     // Verifica variável de ambiente
     const envDevMode = process.env.NEXT_PUBLIC_DEV_MODE === 'true'
     
     return isLocalhost || envDevMode
   }
+  // No servidor, sempre retorna false (só funciona no cliente)
   return false
 }
 

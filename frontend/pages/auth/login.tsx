@@ -26,13 +26,16 @@ export default function Login() {
       setError('')
       
       // Simular delay de autenticação
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 300))
       
       // Criar sessão fake
       setDevSession(email)
       
-      // Redirecionar
-      router.push('/dashboard')
+      // Aguardar um pouco para garantir que localStorage foi atualizado
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // Redirecionar usando window.location para garantir recarregamento
+      window.location.href = '/dashboard'
       return
     }
     

@@ -10,14 +10,24 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     setMounted(true)
     
+    if (typeof window === 'undefined') return
+    
     const currentPath = window.location.pathname
     const publicPaths = ['/auth/login', '/auth/callback']
     
     // Modo de desenvolvimento: permite acesso se tiver sessão dev
-    if (typeof window !== 'undefined' && !isSupabaseConfigured && isDevMode()) {
-      if (!publicPaths.includes(currentPath) && !hasDevSession()) {
-        window.location.href = '/auth/login'
+    if (!isSupabaseConfigured && isDevMode()) {
+      // Se está em uma rota pública, não precisa verificar sessão
+      if (publicPaths.includes(currentPath)) {
+        return
       }
+      
+      // Verificar sessão dev com um pequeno delay para garantir que foi salva
+      setTimeout(() => {
+        if (!hasDevSession()) {
+          window.location.href = '/auth/login'
+        }
+      }, 100)
       return
     }
     
