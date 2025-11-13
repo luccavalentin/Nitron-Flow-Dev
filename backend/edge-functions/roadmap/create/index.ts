@@ -40,11 +40,11 @@ serve(async (req) => {
     const body = await req.json();
     const { project_id, title, description, phase, target_date, status } = body;
 
-    if (!project_id || !title) {
+    if (!title) {
       return new Response(
         JSON.stringify({
           ok: false,
-          error: "project_id e title são obrigatórios",
+          error: "title é obrigatório",
         }),
         {
           status: 400,
@@ -53,22 +53,24 @@ serve(async (req) => {
       );
     }
 
-    // Verificar se o projeto pertence ao usuário
-    const { data: project } = await supabaseClient
-      .from("projects")
-      .select("owner_id")
-      .eq("id", project_id)
-      .eq("owner_id", user.id)
-      .single();
+    // Se project_id foi fornecido, verificar se o projeto pertence ao usuário
+    if (project_id) {
+      const { data: project } = await supabaseClient
+        .from("projects")
+        .select("owner_id")
+        .eq("id", project_id)
+        .eq("owner_id", user.id)
+        .single();
 
-    if (!project) {
-      return new Response(
-        JSON.stringify({ ok: false, error: "Projeto não encontrado" }),
-        {
-          status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      if (!project) {
+        return new Response(
+          JSON.stringify({ ok: false, error: "Projeto não encontrado" }),
+          {
+            status: 404,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
     }
 
     // Criar roadmap item

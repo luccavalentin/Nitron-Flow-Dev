@@ -17,9 +17,7 @@ export default function Roadmap() {
 
   useEffect(() => {
     loadProjects();
-    if (selectedProject) {
-      loadRoadmap();
-    }
+    loadRoadmap();
   }, [selectedProject]);
 
   const loadProjects = async () => {
@@ -31,9 +29,17 @@ export default function Roadmap() {
 
   const loadRoadmap = async () => {
     setLoading(true);
-    const response = await apiRequest(`/roadmap/get?projectId=${selectedProject}`);
-    if (response.ok && response.data) {
-      setRoadmap(response.data);
+    if (selectedProject) {
+      const response = await apiRequest(`/roadmap/get?projectId=${selectedProject}`);
+      if (response.ok && response.data) {
+        setRoadmap(response.data);
+      }
+    } else {
+      // Se não tem projeto selecionado, carregar todos os roadmaps do usuário
+      const response = await apiRequest(`/roadmap/get`);
+      if (response.ok && response.data) {
+        setRoadmap(response.data);
+      }
     }
     setLoading(false);
   };
@@ -56,12 +62,12 @@ export default function Roadmap() {
 
   const handleCreate = async () => {
     const title = prompt("Título do milestone:");
-    if (!title || !selectedProject) return;
+    if (!title) return;
 
     const response = await apiRequest(`/roadmap/create`, {
       method: "POST",
       body: JSON.stringify({
-        project_id: selectedProject,
+        project_id: selectedProject || null,
         title,
         description: "",
         status: "planned",
@@ -69,6 +75,8 @@ export default function Roadmap() {
     });
     if (response.ok) {
       loadRoadmap();
+    } else {
+      alert(`Erro: ${response.error}`);
     }
   };
 
@@ -106,14 +114,14 @@ export default function Roadmap() {
 
             <div className="card-modern p-5 mb-6">
               <label className="block text-sm font-medium text-slate-300 mb-2">
-                Selecionar Projeto
+                Filtrar por Projeto (Opcional)
               </label>
               <select
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
                 className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               >
-                <option value="">Selecione um projeto</option>
+                <option value="">Todos os projetos</option>
                 {projects.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
@@ -122,124 +130,127 @@ export default function Roadmap() {
               </select>
             </div>
 
-            {selectedProject && (
-              <>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-slate-200">Timeline</h2>
-                  <button
-                    onClick={handleCreate}
-                    className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/30"
-                  >
-                    + Novo Milestone
-                  </button>
-                </div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-slate-200">
+                Timeline {selectedProject && `- ${projects.find(p => p.id === selectedProject)?.name || ''}`}
+              </h2>
+              <button
+                onClick={handleCreate}
+                className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/30"
+              >
+                + Novo Milestone
+              </button>
+            </div>
 
-                {loading ? (
-                  <div className="text-center py-12 text-slate-400">Carregando...</div>
-                ) : roadmap.length === 0 ? (
-                  <div className="card-modern p-12 text-center">
-                    <p className="text-slate-400 mb-4">Nenhum milestone criado ainda</p>
-                    <button
-                      onClick={handleCreate}
-                      className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all"
+            {loading ? (
+              <div className="text-center py-12 text-slate-400">Carregando...</div>
+            ) : roadmap.length === 0 ? (
+              <div className="card-modern p-12 text-center">
+                <p className="text-slate-400 mb-4">Nenhum milestone criado ainda</p>
+                <button
+                  onClick={handleCreate}
+                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all"
+                >
+                  Criar Primeiro Milestone
+                </button>
+              </div>
+            ) : (
+              <div className="relative">
+                {/* Timeline line */}
+                <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-slate-700"></div>
+
+                <div className="space-y-6">
+                  {roadmap.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="relative flex items-start gap-6"
                     >
-                      Criar Primeiro Milestone
-                    </button>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    {/* Timeline line */}
-                    <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-slate-700"></div>
+                      {/* Timeline dot */}
+                      <div className={`relative z-10 w-4 h-4 rounded-full ${getStatusColor(item.status)} shadow-lg`}></div>
 
-                    <div className="space-y-6">
-                      {roadmap.map((item, index) => (
-                        <motion.div
-                          key={item.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="relative flex items-start gap-6"
-                        >
-                          {/* Timeline dot */}
-                          <div className={`relative z-10 w-4 h-4 rounded-full ${getStatusColor(item.status)} shadow-lg`}></div>
-
-                          {/* Content card */}
-                          <div className="card-modern flex-1 p-5">
-                            {editingId === item.id ? (
-                              <div className="space-y-4">
-                                <input
-                                  type="text"
-                                  value={editData.title}
-                                  onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                />
-                                <textarea
-                                  value={editData.description}
-                                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                                  rows={3}
-                                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                />
-                                <select
-                                  value={editData.status}
-                                  onChange={(e) => setEditData({ ...editData, status: e.target.value })}
-                                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                >
-                                  <option value="planned">Planejado</option>
-                                  <option value="in_progress">Em Andamento</option>
-                                  <option value="completed">Concluído</option>
-                                </select>
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() => handleSave(item.id)}
-                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                                  >
-                                    Salvar
-                                  </button>
-                                  <button
-                                    onClick={() => setEditingId(null)}
-                                    className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors"
-                                  >
-                                    Cancelar
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <>
-                                <div className="flex items-start justify-between mb-2">
-                                  <h3 className="text-lg font-semibold text-slate-200">{item.title}</h3>
-                                  <div className="flex gap-2">
-                                    <button
-                                      onClick={() => handleEdit(item)}
-                                      className="px-3 py-1 text-xs bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors"
-                                    >
-                                      Editar
-                                    </button>
-                                    <button
-                                      onClick={() => handleDelete(item.id)}
-                                      className="px-3 py-1 text-xs bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                                    >
-                                      Deletar
-                                    </button>
-                                  </div>
-                                </div>
-                                {item.description && (
-                                  <p className="text-sm text-slate-400 mb-2">{item.description}</p>
-                                )}
-                                <div className="flex items-center gap-4 text-xs text-slate-500">
-                                  <span className={`px-2 py-1 rounded ${getStatusColor(item.status)} text-white`}>
-                                    {item.status === "completed" ? "Concluído" : item.status === "in_progress" ? "Em Andamento" : "Planejado"}
-                                  </span>
-                                  <span>{new Date(item.created_at).toLocaleDateString("pt-BR")}</span>
-                                </div>
-                              </>
-                            )}
+                      {/* Content card */}
+                      <div className="card-modern flex-1 p-5">
+                        {editingId === item.id ? (
+                          <div className="space-y-4">
+                            <input
+                              type="text"
+                              value={editData.title}
+                              onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            />
+                            <textarea
+                              value={editData.description}
+                              onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                              rows={3}
+                              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            />
+                            <select
+                              value={editData.status}
+                              onChange={(e) => setEditData({ ...editData, status: e.target.value })}
+                              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            >
+                              <option value="planned">Planejado</option>
+                              <option value="in_progress">Em Andamento</option>
+                              <option value="completed">Concluído</option>
+                            </select>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleSave(item.id)}
+                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                              >
+                                Salvar
+                              </button>
+                              <button
+                                onClick={() => setEditingId(null)}
+                                className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors"
+                              >
+                                Cancelar
+                              </button>
+                            </div>
                           </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
+                        ) : (
+                          <>
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex-1">
+                                <h3 className="text-lg font-semibold text-slate-200">{item.title}</h3>
+                                {item.projects?.name && (
+                                  <p className="text-xs text-slate-500 mt-1">Projeto: {item.projects.name}</p>
+                                )}
+                              </div>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleEdit(item)}
+                                  className="px-3 py-1 text-xs bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors"
+                                >
+                                  Editar
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(item.id)}
+                                  className="px-3 py-1 text-xs bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                >
+                                  Deletar
+                                </button>
+                              </div>
+                            </div>
+                            {item.description && (
+                              <p className="text-sm text-slate-400 mb-2">{item.description}</p>
+                            )}
+                            <div className="flex items-center gap-4 text-xs text-slate-500">
+                              <span className={`px-2 py-1 rounded ${getStatusColor(item.status)} text-white`}>
+                                {item.status === "completed" ? "Concluído" : item.status === "in_progress" ? "Em Andamento" : "Planejado"}
+                              </span>
+                              <span>{new Date(item.created_at).toLocaleDateString("pt-BR")}</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         </main>

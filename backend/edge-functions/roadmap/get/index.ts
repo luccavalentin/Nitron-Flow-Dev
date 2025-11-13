@@ -40,17 +40,41 @@ serve(async (req) => {
     const url = new URL(req.url);
     const projectId = url.searchParams.get("projectId");
 
+    // Se não tem projectId, listar todos os roadmaps do usuário
     if (!projectId) {
-      return new Response(
-        JSON.stringify({ ok: false, error: "projectId é obrigatório" }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      // Buscar todos os roadmaps que pertencem a projetos do usuário ou que não têm projeto
+      const { data: roadmap, error } = await supabaseClient
+        .from("roadmap_items")
+        .select(`
+          *,
+          projects!left(owner_id, name)
+        `)
+        .or(`projects.owner_id.eq.${user.id},project_id.is.null`)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        return new Response(
+          JSON.stringify({ ok: false, error: error.message }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      // Filtrar apenas os que pertencem ao usuário ou não têm projeto
+      const filteredRoadmap = (roadmap || []).filter((item: any) => {
+        if (!item.project_id) return true; // Roadmaps sem projeto são permitidos
+        return item.projects?.owner_id === user.id;
+      });
+
+      return new Response(JSON.stringify({ ok: true, data: filteredRoadmap }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Verificar se o projeto pertence ao usuário
+    // Se tem projectId, verificar se o projeto pertence ao usuário
     const { data: project } = await supabaseClient
       .from("projects")
       .select("owner_id")
@@ -68,12 +92,15 @@ serve(async (req) => {
       );
     }
 
-    // Buscar roadmap items
+    // Buscar roadmap items do projeto
     const { data: roadmap, error } = await supabaseClient
       .from("roadmap_items")
-      .select("*")
+      .select(`
+        *,
+        projects!left(name)
+      `)
       .eq("project_id", projectId)
-      .order("order_index", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) {
       return new Response(
