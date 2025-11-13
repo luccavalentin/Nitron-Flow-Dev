@@ -117,29 +117,33 @@ export default function Tasks() {
                     <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
                       {column.label} ({columnTasks.length})
                     </h2>
-                    <div className="space-y-3">
+                    <div 
+                      className="space-y-3 min-h-[200px]"
+                      data-column={column.id}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.add('bg-gray-200', 'dark:bg-gray-700');
+                      }}
+                      onDragLeave={(e) => {
+                        e.currentTarget.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+                        const taskId = e.dataTransfer.getData('taskId');
+                        if (taskId && column.id) {
+                          handleMove(taskId, column.id);
+                        }
+                      }}
+                    >
                       {columnTasks.map((task) => (
                         <div
                           key={task.id}
                           className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow cursor-move hover:shadow-md transition-shadow"
                           draggable
-                          onDragEnd={(e) => {
-                            const target = document.elementFromPoint(
-                              e.clientX,
-                              e.clientY
-                            );
-                            if (target) {
-                              const targetColumn = target.closest(
-                                "[data-column]"
-                              );
-                              if (targetColumn) {
-                                const newStatus =
-                                  targetColumn.getAttribute("data-column");
-                                if (newStatus && newStatus !== task.status) {
-                                  handleMove(task.id, newStatus);
-                                }
-                              }
-                            }
+                          onDragStart={(e) => {
+                            e.dataTransfer.setData('taskId', task.id);
+                            e.dataTransfer.effectAllowed = 'move';
                           }}
                         >
                           <h3 className="font-medium text-gray-900 dark:text-white mb-2">
