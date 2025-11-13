@@ -143,8 +143,9 @@ npm run dev
 ## 📚 Documentação
 
 ### Documentação Principal
+- **`docs/INDICE_DOCUMENTACAO.md`** 📑 - **ÍNDICE COMPLETO** - Comece aqui para navegar toda a documentação!
 - **`docs/DOCUMENTACAO_COMPLETA.md`** 📚 - **DOCUMENTAÇÃO MESTRE COMPLETA**
-- **`docs/HISTORICO_MUDANCAS.md`** 📝 - Histórico completo de todas as mudanças
+- **`docs/HISTORICO_MUDANCAS.md`** 📝 - Histórico completo de todas as mudanças desde o prompt inicial
 - **`REVISAO_ESPECIFICACAO_COMPLETA.md`** ✅ - Revisão detalhada vs especificação
 - **`STATUS_FINAL.md`** 📊 - Status consolidado do sistema
 
