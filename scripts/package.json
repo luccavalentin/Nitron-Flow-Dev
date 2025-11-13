@@ -1,0 +1,13 @@
+{
+  "name": "nitronflow-scripts",
+  "version": "1.0.0",
+  "description": "Scripts auxiliares do NitronFlow Dev",
+  "scripts": {
+    "watch": "node daemon_watcher.js"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "axios": "^1.6.0"
+  }
+}
+
