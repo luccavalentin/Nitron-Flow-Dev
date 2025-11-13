@@ -1,50 +1,63 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/router";
 
 export default function Header() {
-  const [user, setUser] = useState<any>(null)
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-    }
-    getUser()
+    loadUser();
+    loadTheme();
+  }, []);
 
-    // Verificar tema salvo
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+  const loadUser = async () => {
+    const {
+      data: { user: currentUser },
+    } = await supabase.auth.getUser();
+    setUser(currentUser);
+  };
+
+  const loadTheme = () => {
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     if (savedTheme) {
-      setTheme(savedTheme)
-      document.documentElement.setAttribute('data-theme', savedTheme)
+      setTheme(savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
     }
-  }, [])
+  };
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
-    document.documentElement.setAttribute('data-theme', newTheme)
-  }
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/auth/login");
+  };
 
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            placeholder="Buscar..."
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            NitronFlow Dev
+          </h2>
+          <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded">
+            V40
+          </span>
         </div>
 
         <div className="flex items-center space-x-4">
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Alternar tema"
+            title={theme === "light" ? "Ativar tema escuro" : "Ativar tema claro"}
           >
-            {theme === 'light' ? '🌙' : '☀️'}
+            {theme === "light" ? "🌙" : "☀️"}
           </button>
 
           {user && (
@@ -53,15 +66,20 @@ export default function Header() {
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {user.email}
                 </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Online
+                </p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-medium">
-                {user.email?.charAt(0).toUpperCase()}
-              </div>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                Sair
+              </button>
             </div>
           )}
         </div>
       </div>
     </header>
-  )
+  );
 }
-
