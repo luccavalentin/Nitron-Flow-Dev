@@ -14,6 +14,4 @@ Todas as versões são controladas via Git/GitHub seguindo o padrão:
 
 ## Configuração
 
-- **GitHub**: luccavalentin
-- **Email**: luccasantana88@gmail.com
 - **Projeto**: Nitron-Flow-Dev

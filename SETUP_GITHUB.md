@@ -8,9 +8,11 @@
 2. Após criar o repositório, execute os seguintes comandos:
 
 ```bash
-git remote add origin https://github.com/luccavalentin/Nitron-Flow-Dev.git
+git remote add origin https://github.com/[SEU_USUARIO]/Nitron-Flow-Dev.git
 git push -u origin main
 ```
+
+**Nota**: Substitua `[SEU_USUARIO]` pelo seu nome de usuário do GitHub.
 
 ## Padrão de Commits
 
