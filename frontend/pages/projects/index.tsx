@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { apiRequest } from '@/lib/api'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
+import ProjectCard from '@/components/cards/ProjectCard'
 
 export default function Projects() {
   const router = useRouter()
@@ -79,27 +80,7 @@ export default function Projects() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
-                <div
-                  key={project.id}
-                  onClick={() => router.push(`/projects/${project.id}`)}
-                  className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow cursor-pointer hover:shadow-lg transition-shadow"
-                >
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    {project.name}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                    {project.description || 'Sem descrição'}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      project.status === 'active' 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-                    }`}>
-                      {project.status}
-                    </span>
-                  </div>
-                </div>
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
           )}

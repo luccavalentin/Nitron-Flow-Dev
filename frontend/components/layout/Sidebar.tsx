@@ -18,6 +18,10 @@ const menuItems = [
   { label: 'Configurações', path: '/settings', icon: '⚙️' },
 ]
 
+const workspaceItems = [
+  { label: 'Workspace', path: '/workspace', icon: '💻' },
+]
+
 export default function Sidebar() {
   const router = useRouter()
 

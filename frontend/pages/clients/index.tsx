@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { apiRequest } from '@/lib/api'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
+import ClientCard from '@/components/cards/ClientCard'
 
 export default function Clients() {
   const [clients, setClients] = useState<any[]>([])
@@ -73,29 +74,7 @@ export default function Clients() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {clients.map((client) => (
-                <div
-                  key={client.id}
-                  className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow"
-                >
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    {client.name}
-                  </h3>
-                  {client.contact?.email && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">
-                      📧 {client.contact.email}
-                    </p>
-                  )}
-                  {client.contact?.phone && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                      📞 {client.contact.phone}
-                    </p>
-                  )}
-                  {client.notes && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                      {client.notes}
-                    </p>
-                  )}
-                </div>
+                <ClientCard key={client.id} client={client} />
               ))}
             </div>
           )}
