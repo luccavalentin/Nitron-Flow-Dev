@@ -36,6 +36,7 @@ cp .env.example .env.local
 ```
 
 Edite `frontend/.env.local` com suas credenciais do Supabase:
+
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon_aqui
@@ -69,6 +70,7 @@ npm run dev
 
 1. **Node.js instalado** (versão 18 ou superior)
 2. **Supabase configurado:**
+
    - Execute `sql/nitronflow_schema.sql` no SQL Editor do Supabase
    - Crie os buckets no Storage: `workspaces`, `snapshots`, `receipts`, `ai-uploads`, `backups`
    - Configure as Environment Variables no Supabase
