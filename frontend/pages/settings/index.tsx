@@ -332,6 +332,36 @@ export default function Settings() {
 
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Dados Locais (Desenvolvimento)
+                  </h2>
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Os dados estão sendo salvos localmente no navegador para testes. Eles persistem mesmo após recarregar a página.
+                    </p>
+                    <button
+                      onClick={() => {
+                        if (confirm('Tem certeza que deseja limpar todos os dados locais? Esta ação não pode ser desfeita.')) {
+                          localStorage.removeItem('nitronflow_projects')
+                          localStorage.removeItem('nitronflow_clients')
+                          localStorage.removeItem('nitronflow_tasks')
+                          localStorage.removeItem('nitronflow_budgets')
+                          localStorage.removeItem('nitronflow_receipts')
+                          localStorage.removeItem('nitronflow_payments')
+                          localStorage.removeItem('nitronflow_licenses')
+                          localStorage.removeItem('nitronflow_activities')
+                          alert('Dados locais limpos! Recarregue a página para ver as mudanças.')
+                          window.location.reload()
+                        }
+                      }}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      🗑️ Limpar Todos os Dados Locais
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                     Backup Automático
                   </h2>
                   <div className="space-y-3">
