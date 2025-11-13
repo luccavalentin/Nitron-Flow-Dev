@@ -44,8 +44,8 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-64 glass min-h-screen border-r border-slate-800/50 bg-slate-900/95">
-      <div className="p-6 border-b border-slate-800/50">
+    <div className="w-64 bg-slate-900 min-h-screen border-r border-slate-800">
+      <div className="p-6 border-b border-slate-800">
         <div className="flex items-center space-x-3">
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
@@ -72,26 +72,26 @@ export default function Sidebar() {
               href={item.path}
               className={`group relative flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-400 border-l-2 border-cyan-500 backdrop-blur-sm'
-                  : 'text-slate-300 hover:text-cyan-400 hover:bg-slate-800/60 backdrop-blur-sm'
+                  ? 'bg-gradient-to-r from-cyan-600/30 via-blue-600/30 to-cyan-600/30 text-cyan-300 border-l-2 border-cyan-500 shadow-lg shadow-cyan-500/20'
+                  : 'text-slate-300 hover:text-cyan-300 hover:bg-slate-800 border-l-2 border-transparent'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-cyan-400'} transition-colors`} />
-              <span className={`ml-3 font-medium text-sm ${isActive ? 'text-cyan-400' : 'text-slate-300 group-hover:text-cyan-400'}`}>{item.label}</span>
+              <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-300' : 'text-slate-400 group-hover:text-cyan-400'} transition-colors`} />
+              <span className={`ml-3 font-medium text-sm ${isActive ? 'text-cyan-300' : 'text-slate-300 group-hover:text-cyan-300'}`}>{item.label}</span>
               {isActive && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-lg shadow-cyan-500/50"></div>
+                <div className="ml-auto w-2 h-2 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/60 animate-pulse"></div>
               )}
             </Link>
           )
         })}
       </nav>
 
-      <div className="absolute bottom-0 w-64 p-4 border-t border-slate-800/50 glass bg-slate-900/95">
+      <div className="absolute bottom-0 w-64 p-4 border-t border-slate-800 bg-slate-900">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center px-3 py-2.5 text-slate-300 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-all duration-200 group backdrop-blur-sm"
+          className="w-full flex items-center px-3 py-2.5 text-slate-300 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-all duration-200 group"
         >
-          <LogoutIcon className="w-4 h-4 text-slate-500 group-hover:text-red-400 transition-colors" />
+          <LogoutIcon className="w-4 h-4 text-slate-400 group-hover:text-red-400 transition-colors" />
           <span className="ml-3 font-medium text-sm">Sair</span>
         </button>
       </div>

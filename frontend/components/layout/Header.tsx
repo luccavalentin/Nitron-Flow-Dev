@@ -58,7 +58,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-slate-800/50 px-6 py-3">
+    <header className="sticky top-0 z-50 bg-slate-900 border-b border-slate-800 px-6 py-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
@@ -73,7 +73,7 @@ export default function Header() {
         <div className="flex items-center space-x-3">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-slate-800/30 transition-all text-slate-400 hover:text-cyan-400"
+            className="p-2 rounded-lg hover:bg-slate-800 transition-all text-slate-400 hover:text-cyan-400"
             title={theme === "light" ? "Ativar tema escuro" : "Ativar tema claro"}
           >
             {theme === "light" ? (
@@ -88,7 +88,7 @@ export default function Header() {
           </button>
 
           {user && (
-            <div className="flex items-center space-x-2.5 pl-3 border-l border-slate-800/50">
+            <div className="flex items-center space-x-2.5 pl-3 border-l border-slate-800">
               <div className="text-right">
                 <p className="text-sm font-medium text-slate-200">
                   {user.email?.split('@')[0] || 'Usuário'}

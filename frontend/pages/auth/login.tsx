@@ -148,7 +148,7 @@ export default function Login() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="max-w-md w-full space-y-6 p-8 glass rounded-xl tech-border"
+        className="max-w-md w-full space-y-6 p-8 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl tech-border"
       >
         <div>
           <div className="flex items-center justify-center mb-3">
