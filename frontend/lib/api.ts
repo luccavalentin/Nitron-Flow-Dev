@@ -87,14 +87,19 @@ export async function apiRequest<T = any>(
         
         // GET - filtrar por projectId se fornecido
         if (options?.method === 'GET' || !options?.method) {
-          const url = new URL(endpoint, 'http://localhost')
-          const projectId = url.searchParams.get('projectId')
-          
-          if (projectId) {
-            const filtered = roadmap.filter((item: any) => item.project_id === projectId)
-            return { ok: true, data: filtered }
+          try {
+            // Tentar extrair projectId da URL
+            const urlMatch = endpoint.match(/[?&]projectId=([^&]+)/)
+            const projectId = urlMatch ? urlMatch[1] : null
+            
+            if (projectId) {
+              const filtered = roadmap.filter((item: any) => item.project_id === projectId)
+              return { ok: true, data: filtered }
+            }
+            return { ok: true, data: roadmap }
+          } catch (e) {
+            return { ok: true, data: roadmap }
           }
-          return { ok: true, data: roadmap }
         }
         
         // POST - criar novo roadmap item
